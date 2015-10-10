@@ -127,8 +127,9 @@ EOF
 ##
 ##
 
-PACKAGE=org.supertribe.${MODULE_ID/-/.}
-DIRECTORY=org/supertribe/${MODULE_ID/-//}
+PACKAGE=org.supertribe.${MODULE_ID//-/.}
+DIRECTORY=org/supertribe/${MODULE_ID//-//}
+
 
 ##
 ## Create the main
