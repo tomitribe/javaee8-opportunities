@@ -5,8 +5,9 @@ MODULE_NAME=${2?Specify a module name}
 
 function submodule {
 
-local MODULE_ID=${1?Specify a module id}
-local MODULE_NAME=${2?Specify a module name}
+local PARENT_ID=${1?Specify a parent module id}
+local MODULE_ID=${2?Specify a module id}
+local MODULE_NAME=${3?Specify a module name}
 
 ##
 ## Make three modules for each concept
@@ -16,8 +17,8 @@ local MODULE_NAME=${2?Specify a module name}
 ## ${concept}-interim
 ##
 
-mkdir $MODULE_ID && (
-cd $MODULE_ID
+mkdir "$MODULE_ID" && (
+cd "$MODULE_ID"
 
 ##
 ## Create the pom.xml
@@ -25,7 +26,6 @@ cd $MODULE_ID
 cat > pom.xml <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-
     Licensed to the Apache Software Foundation (ASF) under one or more
     contributor license agreements.  See the NOTICE file distributed with
     this work for additional information regarding copyright ownership.
@@ -41,15 +41,118 @@ cat > pom.xml <<EOF
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.supertribe</groupId>
+  <parent>
+    <groupId>org.supertribe</groupId>
+    <artifactId>$PARENT_ID</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
   <artifactId>$MODULE_ID</artifactId>
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>Java EE :: Opportunities :: $MODULE_NAME</name>
+
+</project>
+EOF
+##
+##
+##
+
+PACKAGE=org.supertribe.${MODULE_ID//-/.}
+DIRECTORY=org/supertribe/${MODULE_ID//-//}
+
+
+##
+## Create the main
+##
+mkdir -p src/main/java/"$DIRECTORY" &&
+cat > src/main/java/"$DIRECTORY"/Main.java <<EOF
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package $PACKAGE;
+
+public class Main {
+}
+EOF
+
+##
+## Create the test
+##
+mkdir -p src/test/java/"$DIRECTORY" &&
+cat > src/test/java/$DIRECTORY/MainTest.java <<EOF
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package $PACKAGE;
+
+public class MainTest {
+}
+EOF
+
+)
+}
+
+mkdir $MODULE_ID && ( cd $MODULE_ID
+submodule "${MODULE_ID}" "${MODULE_ID}-now" "$MODULE_NAME (Now)"
+submodule "${MODULE_ID}" "${MODULE_ID}-next" "$MODULE_NAME (Next)"
+submodule "${MODULE_ID}" "${MODULE_ID}-interim" "$MODULE_NAME (Interim)"
+
+cat > pom.xml <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.supertribe</groupId>
+    <artifactId>javaee8-opportunities</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>${MODULE_ID}</artifactId>
+  <packaging>pom</packaging>
+
+  <name>$MODULE_NAME</name>
+
+  <modules>
+    <module>${MODULE_ID}-now</module>
+    <module>${MODULE_ID}-next</module>
+    <module>${MODULE_ID}-interim</module>
+  </modules>
+
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -114,109 +217,13 @@ cat > pom.xml <<EOF
   <distributionManagement>
     <repository>
       <id>localhost</id>
-      <url>file://${basedir}/target/repo/</url>
+      <url>file://\${basedir}/target/repo/</url>
     </repository>
     <snapshotRepository>
       <id>localhost</id>
-      <url>file://${basedir}/target/snapshot-repo/</url>
+      <url>file://\${basedir}/target/snapshot-repo/</url>
     </snapshotRepository>
   </distributionManagement>
-</project>
-EOF
-##
-##
-##
-
-PACKAGE=org.supertribe.${MODULE_ID//-/.}
-DIRECTORY=org/supertribe/${MODULE_ID//-//}
-
-
-##
-## Create the main
-##
-mkdir -p src/main/java/$DIRECTORY &&
-cat > src/main/java/$DIRECTORY/Main.java <<EOF
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-package $PACKAGE;
-
-public class Main {
-}
-EOF
-
-##
-## Create the test
-##
-mkdir -p src/test/java/$DIRECTORY &&
-cat > src/test/java/$DIRECTORY/MainTest.java <<EOF
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-package $PACKAGE;
-
-public class MainTest {
-}
-EOF
-
-)
-}
-
-mkdir $MODULE_ID && ( cd $MODULE_ID
-submodule "${MODULE_ID}-now" "$MODULE_NAME (Now)"
-submodule "${MODULE_ID}-next" "$MODULE_NAME (Next)"
-submodule "${MODULE_ID}-interim" "$MODULE_NAME (Interim)"
-
-cat > pom.xml <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-  <modelVersion>4.0.0</modelVersion>
-
-  <parent>
-    <groupId>org.supertribe</groupId>
-    <artifactId>javaee8-opportunities</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-
-  <artifactId>${MODULE_ID}</artifactId>
-  <packaging>pom</packaging>
-
-  <name>$MODULE_NAME</name>
-
-  <modules>
-    <module>${MODULE_ID}-now</module>
-    <module>${MODULE_ID}-next</module>
-    <module>${MODULE_ID}-interim</module>
-  </modules>
 </project>
 EOF
 )

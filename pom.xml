@@ -12,12 +12,7 @@
   <name>Java EE Opportunities</name>
 
   <modules>
+    <module>javaee</module>
     <module>schedule-expression</module>
-    <module>asynchronous</module>
-    <module>bean-validation</module>
-    <module>runas</module>
-    <module>testing-security</module>
-    <module>callbacks</module>
-    <module>cdi-extension</module>
   </modules>
 </project>
