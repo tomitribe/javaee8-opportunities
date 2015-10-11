@@ -27,17 +27,13 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class InterceptorStack {
-    private final Object beanInstance;
-    private final Method targetMethod;
     private List<Interception> interceptions;
 
-    public InterceptorStack(final Object beanInstance, final Method targetMethod, final List<Interception> interceptions) {
-        this.beanInstance = beanInstance;
-        this.targetMethod = targetMethod;
+    public InterceptorStack(final List<Interception> interceptions) {
         this.interceptions = interceptions;
     }
 
-    public Object invoke(final Object... parameters) throws Exception {
+    public Object invoke(final Object beanInstance, final Method targetMethod, final Object... parameters) throws Exception {
         final Invocation invocation = new Invocation() {
             @Override
             public Object invoke() throws Exception {
@@ -46,7 +42,7 @@ public class InterceptorStack {
         };
         final Iterator<Interception> invocations = interceptions.iterator();
         final Map<String, Object> contextData = new TreeMap<>();
-        final Class<?>[] parameterTypes = this.targetMethod.getParameterTypes();
+        final Class<?>[] parameterTypes = targetMethod.getParameterTypes();
         final InvocationContext context = new InvocationContext() {
 
             @Override
@@ -56,12 +52,12 @@ public class InterceptorStack {
 
             @Override
             public Object getTarget() {
-                return InterceptorStack.this.beanInstance;
+                return beanInstance;
             }
 
             @Override
             public Method getMethod() {
-                return InterceptorStack.this.targetMethod;
+                return targetMethod;
             }
 
             @Override

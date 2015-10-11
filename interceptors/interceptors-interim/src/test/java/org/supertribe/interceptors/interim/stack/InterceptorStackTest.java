@@ -21,6 +21,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import javax.interceptor.InvocationContext;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,9 +46,9 @@ public class InterceptorStackTest {
         interceptors.add(new MethodLevelInterceptorTwo()::businessMethodInterceptor);
         interceptors.add(bean::beanClassBusinessMethodInterceptor);
 
-        final InterceptorStack stack = new InterceptorStack(bean, FullyInterceptedBean.class.getMethod("businessMethod", String.class, int.class), interceptors);
-
-        final List<String> invoke = (List<String>) stack.invoke("Question", 6 * 9);
+        final Method businessMethod = FullyInterceptedBean.class.getMethod("businessMethod", String.class, int.class);
+        final InterceptorStack stack = new InterceptorStack(interceptors);
+        final List<String> invoke = (List<String>) stack.invoke(bean, businessMethod, "Question", 6 * 9);
 
         final List<String> expected = new ArrayList<String>();
         expected.add("Before:Red");
