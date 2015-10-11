@@ -24,50 +24,30 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
-/**
- * @version $Rev$ $Date$
- */
 public class ReflectionInvocationContext implements InvocationContext {
     private final Iterator<Interceptor> interceptors;
     private final Object target;
     private final Method method;
     private final Object[] parameters;
-    private final Map<String, Object> contextData = new TreeMap<String, Object>();
+    private final Map<String, Object> contextData = new TreeMap<>();
     private final Class<?>[] parameterTypes;
 
     private final Operation operation;
 
     public ReflectionInvocationContext(final Operation operation, final List<Interceptor> interceptors, final Object target, final Method method, final Object... parameters) {
-        if (operation == null) {
-            throw new NullPointerException("operation is null");
-        }
-        if (interceptors == null) {
-            throw new NullPointerException("interceptors is null");
-        }
-        if (target == null) {
-            throw new NullPointerException("target is null");
-        }
-
-        this.operation = operation;
-        this.interceptors = interceptors.iterator();
-        this.target = target;
-        this.method = method;
-        this.parameters = parameters;
-
-        if (method == null) {
-            parameterTypes = new Class[0];
-        } else {
-            parameterTypes = method.getParameterTypes();
-        }
+        this.operation = Objects.requireNonNull(operation);
+        this.interceptors = Objects.requireNonNull(interceptors).iterator();
+        this.target = Objects.requireNonNull(target);
+        this.method = Objects.requireNonNull(method);
+        this.parameters = Objects.requireNonNull(parameters);
+        this.parameterTypes = method.getParameterTypes();
     }
 
     @Override
     public Object getTimer() {
-        if (operation.equals(Operation.TIMEOUT)) {
-            return parameters[0];
-        }
         return null;
     }
 
@@ -83,42 +63,18 @@ public class ReflectionInvocationContext implements InvocationContext {
 
     @Override
     public Constructor<?> getConstructor() {
-        throw new IllegalStateException(); // TODO
+        throw new IllegalStateException();
     }
 
     @Override
     public Object[] getParameters() {
-        //TODO Need to figure out what is going on with afterCompletion call back here ?
-        if (Operation.POST_CONSTRUCT.equals(operation) || Operation.PRE_DESTROY.equals(operation)) {
-            //if (operation.isCallback() && !operation.equals(Operation.AFTER_COMPLETION) && !operation.equals(Operation.TIMEOUT)) {
-            throw new IllegalStateException(getIllegalParameterAccessMessage());
-        }
         return this.parameters;
-    }
-
-    private String getIllegalParameterAccessMessage() {
-        String m = "Callback methods cannot access parameters.";
-        m += "  Callback Type: " + operation;
-        if (method != null) {
-            m += ", Target Method: " + method.getName();
-        }
-        if (target != null) {
-            m += ", Target Bean: " + target.getClass().getName();
-        }
-        return m;
     }
 
     @Override
     public void setParameters(final Object[] parameters) {
-        if (operation.isCallback() && !operation.equals(Operation.TIMEOUT)) {
-            throw new IllegalStateException(getIllegalParameterAccessMessage());
-        }
-        if (parameters == null) {
-            throw new IllegalArgumentException("parameters is null");
-        }
-        if (parameters.length != this.parameters.length) {
-            throw new IllegalArgumentException("Expected " + this.parameters.length + " parameters, but only got " + parameters.length + " parameters");
-        }
+        checkParameters(parameters);
+
         for (int i = 0; i < parameters.length; i++) {
             final Object parameter = parameters[i];
             final Class<?> parameterType = parameterTypes[i];
@@ -142,6 +98,14 @@ public class ReflectionInvocationContext implements InvocationContext {
         System.arraycopy(parameters, 0, this.parameters, 0, parameters.length);
     }
 
+    private void checkParameters(Object[] parameters) {
+        Objects.requireNonNull(parameters);
+
+        if (parameters.length != this.parameters.length) {
+            throw new IllegalArgumentException("Expected " + this.parameters.length + " parameters, but only got " + parameters.length + " parameters");
+        }
+    }
+
     @Override
     public Map<String, Object> getContextData() {
         return contextData;
@@ -149,35 +113,20 @@ public class ReflectionInvocationContext implements InvocationContext {
 
     private Invocation next() {
         if (interceptors.hasNext()) {
-            final Interceptor interceptor = interceptors.next();
-            final Object nextInstance = interceptor.getInstance();
-            final Method nextMethod = interceptor.getMethod();
 
-            if (nextMethod.getParameterTypes().length == 1 && nextMethod.getParameterTypes()[0] == InvocationContext.class) {
-                return new InterceptorInvocation(nextInstance, nextMethod, this);
-            } else {
-                return new LifecycleInvocation(nextInstance, nextMethod, this, parameters);
-            }
-        } else if (method != null) {
-            //EJB 3.1, it is allowed that timeout method does not have parameter Timer.class,
-            //However, while invoking the timeout method, the timer value is passed, as it is also required by InnvocationContext.getTimer() method
-            final Object[] methodParameters;
-            if (operation.equals(Operation.TIMEOUT) && method.getParameterTypes().length == 0) {
-                methodParameters = new Object[0];
-            } else {
-                methodParameters = parameters;
-            }
-            return new BeanInvocation(target, method, methodParameters);
+            final Interceptor interceptor = interceptors.next();
+            return new InterceptorInvocation(interceptor.getInstance(), interceptor.getMethod(), this);
+
         } else {
-            return new NoOpInvocation();
+
+            final Object[] methodParameters = parameters;
+            return new BeanInvocation(target, method, methodParameters);
+
         }
     }
 
     @Override
     public Object proceed() throws Exception {
-        // The bulk of the logic of this method has intentionally been moved
-        // out so stepping through a large stack in a debugger can be done quickly.
-        // Simply put one break point on 'next.invoke()' or one inside that method.
         try {
             final Invocation next = next();
             return next.invoke();
@@ -198,9 +147,7 @@ public class ReflectionInvocationContext implements InvocationContext {
         }
 
         public Object invoke() throws Exception {
-
-            final Object value = method.invoke(target, args);
-            return value;
+            return method.invoke(target, args);
         }
 
 
@@ -220,36 +167,6 @@ public class ReflectionInvocationContext implements InvocationContext {
             super(target, method, new Object[]{invocationContext});
         }
     }
-
-    private static class LifecycleInvocation extends Invocation {
-        private final InvocationContext invocationContext;
-
-        public LifecycleInvocation(final Object target, final Method method, final InvocationContext invocationContext, final Object[] args) {
-            super(target, method, args);
-            this.invocationContext = invocationContext;
-        }
-
-        public Object invoke() throws Exception {
-            // invoke the callback
-            super.invoke();
-
-            // we need to call proceed so callbacks in subclasses get invoked
-            final Object value = invocationContext.proceed();
-            return value;
-        }
-    }
-
-    private static class NoOpInvocation extends Invocation {
-        public NoOpInvocation() {
-            super(null, null, null);
-        }
-
-        public Object invoke() throws IllegalAccessException, InvocationTargetException {
-            return null;
-        }
-    }
-
-    // todo verify excpetion types
 
     /**
      * Business method interceptors can only throw exception allowed by the target business method.

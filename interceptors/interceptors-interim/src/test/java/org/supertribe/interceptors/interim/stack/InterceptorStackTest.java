@@ -40,9 +40,9 @@ public class InterceptorStackTest {
         interceptors.add(new Interceptor(new MethodLevelInterceptorTwo(), MethodLevelInterceptorTwo.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
         interceptors.add(new Interceptor(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("beanClassBusinessMethodInterceptor", InvocationContext.class)));
 
-        final InterceptorStack stack = new InterceptorStack(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("businessMethod"), Operation.BUSINESS, interceptors);
+        final InterceptorStack stack = new InterceptorStack(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("businessMethod", int.class, String.class), Operation.BUSINESS, interceptors);
 
-        final List<String> invoke = (List<String>) stack.invoke();
+        final List<String> invoke = (List<String>) stack.invoke(42, "Answer");
 
         final List<String> expected = new ArrayList<String>();
         expected.add("DefaultInterceptorOne");
@@ -55,6 +55,7 @@ public class InterceptorStackTest {
         expected.add("MethodLevelInterceptorTwo");
         expected.add("beanClassBusinessMethodInterceptor");
         expected.add("businessMethod");
+        expected.add("42, Answer");
 
         Assert.assertEquals(Join.join("\n", invoke), Join.join("\n", expected));
     }

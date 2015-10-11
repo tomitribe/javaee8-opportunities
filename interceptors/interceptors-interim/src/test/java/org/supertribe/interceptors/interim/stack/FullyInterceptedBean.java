@@ -28,14 +28,14 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 @Stateless
-@Local
 @Interceptors({ClassLevelInterceptorOne.class, ClassLevelInterceptorTwo.class})
-public class FullyInterceptedBean extends FullyInterceptedSuperClass implements FullyIntercepted {
+public class FullyInterceptedBean extends FullyInterceptedSuperClass {
 
     @Interceptors({MethodLevelInterceptorOne.class, MethodLevelInterceptorTwo.class})
-    public List<String> businessMethod() {
+    public List<String> businessMethod(int one, String two) {
         final List<String> list = new ArrayList<String>();
         list.add("businessMethod");
+        list.add(String.format("%s, %s", one, two));
         return list;
     }
 
