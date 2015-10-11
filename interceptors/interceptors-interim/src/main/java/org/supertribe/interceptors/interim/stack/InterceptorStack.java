@@ -30,17 +30,17 @@ import java.util.TreeMap;
 
 public class InterceptorStack {
     private final Object beanInstance;
-    private final List<Interceptor> interceptors;
     private final Method targetMethod;
+    private List<Interception> interceptions;
 
-    public InterceptorStack(final Object beanInstance, final Method targetMethod, final List<Interceptor> interceptors) {
+    public InterceptorStack(final Object beanInstance, final Method targetMethod, final List<Interception> interceptions) {
         this.beanInstance = beanInstance;
         this.targetMethod = targetMethod;
-        this.interceptors = interceptors;
+        this.interceptions = interceptions;
     }
 
     public InvocationContext createInvocationContext(final Object... parameters) {
-        return new FunctionalInvocationContext(beanInstance, targetMethod, FunctionalInvocationContext.toInterceptors(interceptors), parameters);
+        return new FunctionalInvocationContext(beanInstance, targetMethod, interceptions, parameters);
     }
 
     public Object invoke(final Object... parameters) throws Exception {

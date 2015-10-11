@@ -23,7 +23,6 @@ import org.junit.Test;
 import javax.interceptor.InvocationContext;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class InterceptorStackTest {
 
@@ -41,7 +40,7 @@ public class InterceptorStackTest {
         interceptors.add(new Interceptor(new MethodLevelInterceptorTwo(), MethodLevelInterceptorTwo.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
         interceptors.add(new Interceptor(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("beanClassBusinessMethodInterceptor", InvocationContext.class)));
 
-        final InterceptorStack stack = new InterceptorStack(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("businessMethod", int.class, String.class), interceptors);
+        final InterceptorStack stack = new InterceptorStack(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("businessMethod", int.class, String.class), InterceptorStack.FunctionalInvocationContext.toInterceptors(interceptors));
 
         final List<String> invoke = (List<String>) stack.invoke(42, "Answer");
 
