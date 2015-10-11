@@ -21,6 +21,7 @@ import javax.interceptor.InvocationContext;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,8 @@ import java.util.Objects;
 import java.util.TreeMap;
 
 public class ReflectionInvocationContext implements InvocationContext {
-    private final Iterator<Interceptor> interceptors;
+
+    private final Iterator<Invocation> invocations;
     private final Object target;
     private final Method method;
     private final Object[] parameters;
@@ -36,11 +38,17 @@ public class ReflectionInvocationContext implements InvocationContext {
     private final Class<?>[] parameterTypes;
 
     public ReflectionInvocationContext(final List<Interceptor> interceptors, final Object target, final Method method, final Object... parameters) {
-        this.interceptors = Objects.requireNonNull(interceptors).iterator();
         this.target = Objects.requireNonNull(target);
         this.method = Objects.requireNonNull(method);
         this.parameters = Objects.requireNonNull(parameters);
         this.parameterTypes = method.getParameterTypes();
+
+        final List<Invocation> list = new ArrayList<>();
+        for (final Interceptor interceptor : interceptors) {
+            list.add(new InterceptorInvocation(interceptor.getInstance(), interceptor.getMethod(), this));
+        }
+
+        invocations = list.iterator();
     }
 
     @Override
@@ -109,11 +117,8 @@ public class ReflectionInvocationContext implements InvocationContext {
     }
 
     private Invocation next() {
-        if (interceptors.hasNext()) {
-
-            final Interceptor interceptor = interceptors.next();
-            return new InterceptorInvocation(interceptor.getInstance(), interceptor.getMethod(), this);
-
+        if (invocations.hasNext()) {
+            return invocations.next();
         } else {
 
             final Object[] methodParameters = parameters;
