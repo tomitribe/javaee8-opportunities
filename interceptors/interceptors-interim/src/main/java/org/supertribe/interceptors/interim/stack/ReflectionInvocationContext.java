@@ -116,22 +116,15 @@ public class ReflectionInvocationContext implements InvocationContext {
         return contextData;
     }
 
-    private Invocation next() {
-        if (invocations.hasNext()) {
-            return invocations.next();
-        } else {
-
-            final Object[] methodParameters = parameters;
-            return new BeanInvocation(target, method, methodParameters);
-
-        }
-    }
-
     @Override
     public Object proceed() throws Exception {
         try {
-            final Invocation next = next();
-            return next.invoke();
+            if (invocations.hasNext()) {
+                Invocation result = invocations.next();
+                return result.invoke();
+            } else {
+                return method.invoke(target, parameters);
+            }
         } catch (final InvocationTargetException e) {
             throw unwrapInvocationTargetException(e);
         }
