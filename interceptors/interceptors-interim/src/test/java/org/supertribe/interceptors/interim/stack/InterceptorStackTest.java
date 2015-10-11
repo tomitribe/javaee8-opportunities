@@ -28,19 +28,19 @@ public class InterceptorStackTest {
 
     @Test
     public void test() throws Exception {
-        final ArrayList<Interceptor> interceptors = new ArrayList<>();
+        final ArrayList<Interception> interceptors = new ArrayList<>();
 
-        interceptors.add(new Interceptor(new DefaultInterceptorOne(), DefaultInterceptorOne.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new Interceptor(new DefaultInterceptorTwo(), DefaultInterceptorTwo.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new Interceptor(new ClassLevelInterceptorSuperClassOne(), ClassLevelInterceptorSuperClassOne.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new Interceptor(new ClassLevelInterceptorSuperClassTwo(), ClassLevelInterceptorSuperClassTwo.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new Interceptor(new ClassLevelInterceptorOne(), ClassLevelInterceptorOne.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new Interceptor(new ClassLevelInterceptorTwo(), ClassLevelInterceptorTwo.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new Interceptor(new MethodLevelInterceptorOne(), MethodLevelInterceptorOne.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new Interceptor(new MethodLevelInterceptorTwo(), MethodLevelInterceptorTwo.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new Interceptor(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("beanClassBusinessMethodInterceptor", InvocationContext.class)));
+        interceptors.add(new InterceptionImpl(new DefaultInterceptorOne(), DefaultInterceptorOne.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
+        interceptors.add(new InterceptionImpl(new DefaultInterceptorTwo(), DefaultInterceptorTwo.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
+        interceptors.add(new InterceptionImpl(new ClassLevelInterceptorSuperClassOne(), ClassLevelInterceptorSuperClassOne.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
+        interceptors.add(new InterceptionImpl(new ClassLevelInterceptorSuperClassTwo(), ClassLevelInterceptorSuperClassTwo.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
+        interceptors.add(new InterceptionImpl(new ClassLevelInterceptorOne(), ClassLevelInterceptorOne.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
+        interceptors.add(new InterceptionImpl(new ClassLevelInterceptorTwo(), ClassLevelInterceptorTwo.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
+        interceptors.add(new InterceptionImpl(new MethodLevelInterceptorOne(), MethodLevelInterceptorOne.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
+        interceptors.add(new InterceptionImpl(new MethodLevelInterceptorTwo(), MethodLevelInterceptorTwo.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
+        interceptors.add(new InterceptionImpl(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("beanClassBusinessMethodInterceptor", InvocationContext.class)));
 
-        final InterceptorStack stack = new InterceptorStack(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("businessMethod", int.class, String.class), InterceptorStack.FunctionalInvocationContext.toInterceptors(interceptors));
+        final InterceptorStack stack = new InterceptorStack(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("businessMethod", int.class, String.class), interceptors);
 
         final List<String> invoke = (List<String>) stack.invoke(42, "Answer");
 
