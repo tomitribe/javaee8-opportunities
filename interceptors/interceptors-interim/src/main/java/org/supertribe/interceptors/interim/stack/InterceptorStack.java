@@ -24,7 +24,6 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 
 public class InterceptorStack {
@@ -39,88 +38,72 @@ public class InterceptorStack {
     }
 
     public Object invoke(final Object... parameters) throws Exception {
-        final InvocationContext context = new FunctionalInvocationContext(beanInstance, targetMethod, interceptions, parameters);
+        final Invocation invocation = new Invocation() {
+            @Override
+            public Object invoke() throws Exception {
+                return targetMethod.invoke(beanInstance, parameters);
+            }
+        };
+        final Iterator<Interception> invocations = interceptions.iterator();
+        final Map<String, Object> contextData = new TreeMap<>();
+        final Class<?>[] parameterTypes = this.targetMethod.getParameterTypes();
+        final InvocationContext context = new InvocationContext() {
+
+            @Override
+            public Object getTimer() {
+                return null;
+            }
+
+            @Override
+            public Object getTarget() {
+                return InterceptorStack.this.beanInstance;
+            }
+
+            @Override
+            public Method getMethod() {
+                return InterceptorStack.this.targetMethod;
+            }
+
+            @Override
+            public Constructor<?> getConstructor() {
+                throw new IllegalStateException();
+            }
+
+            @Override
+            public Object[] getParameters() {
+                return parameters;
+            }
+
+            @Override
+            public void setParameters(final Object[] fromParameters) {
+                Parameters.overwrite(fromParameters, parameters, parameterTypes);
+            }
+
+            @Override
+            public Map<String, Object> getContextData() {
+                return contextData;
+            }
+
+            @Override
+            public Object proceed() throws Exception {
+                try {
+                    if (invocations.hasNext()) {
+                        Interception result = invocations.next();
+                        return result.invoke(this);
+                    } else {
+                        return invocation.invoke();
+                    }
+                } catch (final InvocationTargetException e) {
+                    throw Exceptions.unwrapCause(e);
+                }
+            }
+        };
         return context.proceed();
     }
 
-    public static class FunctionalInvocationContext implements InvocationContext {
+    public static class Exceptions {
 
-        private final Iterator<Interception> invocations;
-        private final Object target;
-        private final Method method;
-        private final Object[] parameters;
-        private final Map<String, Object> contextData = new TreeMap<>();
-        private final Class<?>[] parameterTypes;
-        private final Invocation invocation;
-
-        public FunctionalInvocationContext(final Object target, final Method method, final List<Interception> interceptions, final Object... parameters) {
-            this.target = Objects.requireNonNull(target);
-            this.method = Objects.requireNonNull(method);
-            this.parameters = Objects.requireNonNull(parameters);
-            this.parameterTypes = method.getParameterTypes();
-
-            invocations = interceptions.iterator();
-            invocation = ()-> method.invoke(this.target, this.parameters);
-        }
-
-        @Override
-        public Object getTimer() {
-            return null;
-        }
-
-        @Override
-        public Object getTarget() {
-            return target;
-        }
-
-        @Override
-        public Method getMethod() {
-            return method;
-        }
-
-        @Override
-        public Constructor<?> getConstructor() {
-            throw new IllegalStateException();
-        }
-
-        @Override
-        public Object[] getParameters() {
-            return this.parameters;
-        }
-
-        @Override
-        public void setParameters(final Object[] fromParameters) {
-            Parameters.overwrite(fromParameters, this.parameters, this.parameterTypes);
-        }
-
-        @Override
-        public Map<String, Object> getContextData() {
-            return contextData;
-        }
-
-        @Override
-        public Object proceed() throws Exception {
-            try {
-                if (invocations.hasNext()) {
-                    Interception result = invocations.next();
-                    return result.invoke(this);
-                } else {
-                    return invocation.invoke();
-                }
-            } catch (final InvocationTargetException e) {
-                throw unwrapCause(e);
-            }
-        }
-
-        /**
-         * Business method interceptors can only throw exception allowed by the target business method.
-         * Lifecycle interceptors can only throw RuntimeException.
-         *
-         * @param e the invocation target exception of a reflection method invoke
-         * @return the cause of the exception
-         * @throws AssertionError if the cause is not an Exception or Error.
-         */
-        private Exception unwrapCause(final Exception e) {
+        public static Exception unwrapCause(final Exception e) {
             final Throwable cause = e.getCause();
             if (cause == null) {
                 return e;
@@ -132,12 +115,5 @@ public class InterceptorStack {
                 throw new AssertionError(cause);
             }
         }
-
-        public String toString() {
-            final String methodName = method != null ? method.getName() : null;
-
-            return "InvocationContext(target=" + target.getClass().getName() + ", method=" + methodName + ")";
-        }
     }
-
 }
