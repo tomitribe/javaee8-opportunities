@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,7 +14,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.schedule.expression.interim;
+package org.supertribe.interceptors.interim.stack;
 
-public class Main {
+import javax.interceptor.InvocationContext;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @version $Rev$ $Date$
+ */
+public class Utils {
+
+    public static List<String> addClassSimpleName(final InvocationContext ic, final String classSimpleName) throws Exception {
+        final List<String> list = new ArrayList<String>();
+        list.add(classSimpleName);
+        final List<String> listOfStrings = (List<String>) ic.proceed();
+        if (listOfStrings != null) {
+            list.addAll(listOfStrings);
+        }
+        return list;
+    }
+
 }

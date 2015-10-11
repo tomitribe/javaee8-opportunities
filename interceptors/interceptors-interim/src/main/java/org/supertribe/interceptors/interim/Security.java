@@ -14,7 +14,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.schedule.expression.interim;
+package org.supertribe.interceptors.interim;
 
-public class MainTest {
+import javax.annotation.security.RunAs;
+import javax.interceptor.InvocationContext;
+
+@RunAs("Manager")
+public class Security {
+
+    public Object manager(InvocationContext invocationContext) throws Exception {
+        return invocationContext.proceed();
+    }
 }

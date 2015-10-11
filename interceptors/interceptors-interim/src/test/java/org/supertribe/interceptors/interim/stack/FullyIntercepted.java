@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,11 +14,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.interceptors.interim;
+package org.supertribe.interceptors.interim.stack;
 
-public class Main {
+import java.util.List;
 
-    public static void main(String[] args) {
+/**
+ * @version $Rev$ $Date$
+ */
+public interface FullyIntercepted {
 
-    }
+    List<String> businessMethod();
+
+    List<String> methodWithDefaultInterceptorsExcluded();
+
 }

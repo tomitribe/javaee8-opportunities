@@ -16,9 +16,20 @@
  */
 package org.supertribe.interceptors.interim;
 
-public class Main {
+import javax.ejb.Lock;
+import javax.ejb.LockType;
+import javax.ejb.Singleton;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.interceptor.InvocationContext;
 
-    public static void main(String[] args) {
+@Singleton
+@Lock(LockType.READ)
+public class Transactions {
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public Object transaction(InvocationContext invocationContext) throws Exception {
+        return invocationContext.proceed();
     }
+
 }

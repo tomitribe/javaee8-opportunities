@@ -16,9 +16,5 @@
  */
 package org.supertribe.interceptors.interim;
 
-public class Main {
-
-    public static void main(String[] args) {
-
-    }
+public class Logging {
 }
