@@ -30,15 +30,15 @@ public class InterceptorStackTest {
     public void test() throws Exception {
         final ArrayList<Interception> interceptors = new ArrayList<>();
 
-        interceptors.add(new InterceptionImpl(new DefaultInterceptorOne(), DefaultInterceptorOne.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new InterceptionImpl(new DefaultInterceptorTwo(), DefaultInterceptorTwo.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new InterceptionImpl(new ClassLevelInterceptorSuperClassOne(), ClassLevelInterceptorSuperClassOne.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new InterceptionImpl(new ClassLevelInterceptorSuperClassTwo(), ClassLevelInterceptorSuperClassTwo.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new InterceptionImpl(new ClassLevelInterceptorOne(), ClassLevelInterceptorOne.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new InterceptionImpl(new ClassLevelInterceptorTwo(), ClassLevelInterceptorTwo.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new InterceptionImpl(new MethodLevelInterceptorOne(), MethodLevelInterceptorOne.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new InterceptionImpl(new MethodLevelInterceptorTwo(), MethodLevelInterceptorTwo.class.getMethod("businessMethodInterceptor", InvocationContext.class)));
-        interceptors.add(new InterceptionImpl(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("beanClassBusinessMethodInterceptor", InvocationContext.class)));
+        interceptors.add(new DefaultInterceptorOne()::businessMethodInterceptor);
+        interceptors.add(new DefaultInterceptorTwo()::businessMethodInterceptor);
+        interceptors.add(new ClassLevelInterceptorSuperClassOne()::businessMethodInterceptor);
+        interceptors.add(new ClassLevelInterceptorSuperClassTwo()::businessMethodInterceptor);
+        interceptors.add(new ClassLevelInterceptorOne()::businessMethodInterceptor);
+        interceptors.add(new ClassLevelInterceptorTwo()::businessMethodInterceptor);
+        interceptors.add(new MethodLevelInterceptorOne()::businessMethodInterceptor);
+        interceptors.add(new MethodLevelInterceptorTwo()::businessMethodInterceptor);
+        interceptors.add(new FullyInterceptedBean()::beanClassBusinessMethodInterceptor);
 
         final InterceptorStack stack = new InterceptorStack(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("businessMethod", int.class, String.class), interceptors);
 
