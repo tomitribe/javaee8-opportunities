@@ -21,7 +21,6 @@ import javax.interceptor.InvocationContext;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -64,14 +63,6 @@ public class InterceptorStack {
             this.parameterTypes = method.getParameterTypes();
 
             invocations = interceptions.iterator();
-        }
-
-        public static List<Interception> toInterceptors(List<Interceptor> interceptors) {
-            final List<Interception> list = new ArrayList<>();
-            for (final Interceptor interceptor : interceptors) {
-                list.add(new InterceptionImpl(interceptor.getInstance(), interceptor.getMethod()));
-            }
-            return list;
         }
 
         @Override
