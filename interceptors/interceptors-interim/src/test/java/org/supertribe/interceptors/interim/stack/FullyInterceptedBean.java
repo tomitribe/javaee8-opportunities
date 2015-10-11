@@ -16,7 +16,6 @@
  */
 package org.supertribe.interceptors.interim.stack;
 
-import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptors;
@@ -32,10 +31,10 @@ import java.util.List;
 public class FullyInterceptedBean extends FullyInterceptedSuperClass {
 
     @Interceptors({MethodLevelInterceptorOne.class, MethodLevelInterceptorTwo.class})
-    public List<String> businessMethod(int one, String two) {
-        final List<String> list = new ArrayList<String>();
+    public List<String> businessMethod(String string, int i) {
+        final List<String> list = new ArrayList<>();
         list.add("businessMethod");
-        list.add(String.format("%s, %s", one, two));
+        list.add(String.format("%s, %s", string.replace("Question", "Answer"), i));
         return list;
     }
 

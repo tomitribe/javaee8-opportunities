@@ -30,6 +30,9 @@ public class InterceptorStackTest {
     public void test() throws Exception {
         final ArrayList<Interception> interceptors = new ArrayList<>();
 
+        interceptors.add(this::red);
+        interceptors.add(this::green);
+        interceptors.add(this::blue);
         interceptors.add(new DefaultInterceptorOne()::businessMethodInterceptor);
         interceptors.add(new DefaultInterceptorTwo()::businessMethodInterceptor);
         interceptors.add(new ClassLevelInterceptorSuperClassOne()::businessMethodInterceptor);
@@ -40,11 +43,14 @@ public class InterceptorStackTest {
         interceptors.add(new MethodLevelInterceptorTwo()::businessMethodInterceptor);
         interceptors.add(new FullyInterceptedBean()::beanClassBusinessMethodInterceptor);
 
-        final InterceptorStack stack = new InterceptorStack(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("businessMethod", int.class, String.class), interceptors);
+        final InterceptorStack stack = new InterceptorStack(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("businessMethod", String.class, int.class), interceptors);
 
-        final List<String> invoke = (List<String>) stack.invoke(42, "Answer");
+        final List<String> invoke = (List<String>) stack.invoke("Question", 6 * 9);
 
         final List<String> expected = new ArrayList<String>();
+        expected.add("Before:Red");
+        expected.add("Before:Green");
+        expected.add("Before:Blue");
         expected.add("Before:DefaultInterceptorOne");
         expected.add("Before:DefaultInterceptorTwo");
         expected.add("Before:ClassLevelInterceptorSuperClassOne");
@@ -55,7 +61,7 @@ public class InterceptorStackTest {
         expected.add("Before:MethodLevelInterceptorTwo");
         expected.add("Before:beanClassBusinessMethodInterceptor");
         expected.add("businessMethod");
-        expected.add("42, Answer");
+        expected.add("Answer, 42");
         expected.add("After:beanClassBusinessMethodInterceptor");
         expected.add("After:MethodLevelInterceptorTwo");
         expected.add("After:MethodLevelInterceptorOne");
@@ -65,9 +71,22 @@ public class InterceptorStackTest {
         expected.add("After:ClassLevelInterceptorSuperClassOne");
         expected.add("After:DefaultInterceptorTwo");
         expected.add("After:DefaultInterceptorOne");
+        expected.add("After:Blue");
+        expected.add("After:Green");
+        expected.add("After:Red");
 
         Assert.assertEquals(Join.join("\n", invoke), Join.join("\n", expected));
     }
 
+    public Object red(InvocationContext context) throws Exception {
+        return Utils.addClassSimpleName(context, "Red");
+    }
 
+    public Object green(InvocationContext context) throws Exception {
+        return Utils.addClassSimpleName(context, "Green");
+    }
+
+    public Object blue(InvocationContext context) throws Exception {
+        return Utils.addClassSimpleName(context, "Blue");
+    }
 }
