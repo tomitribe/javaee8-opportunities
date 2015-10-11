@@ -31,7 +31,6 @@ public class InterceptorStackTest {
     public void test() throws Exception {
 
         final FullyInterceptedBean bean = new FullyInterceptedBean();
-        final Method businessMethod = FullyInterceptedBean.class.getMethod("businessMethod", String.class, int.class);
 
         final List<String> invoke = (List<String>) new InterceptorStack()
                 .add(this::red)
@@ -46,7 +45,9 @@ public class InterceptorStackTest {
                 .add(new MethodLevelInterceptorOne()::businessMethodInterceptor)
                 .add(new MethodLevelInterceptorTwo()::businessMethodInterceptor)
                 .add(bean::beanClassBusinessMethodInterceptor)
-                .invoke(bean, businessMethod, "Question", 6 * 9);
+                .invoke(() -> {
+                    return bean.businessMethod("Question", 6 * 9);
+                });
 
         final List<String> expected = new ArrayList<String>();
         expected.add("Before:Red");
@@ -62,7 +63,8 @@ public class InterceptorStackTest {
         expected.add("Before:MethodLevelInterceptorTwo");
         expected.add("Before:beanClassBusinessMethodInterceptor");
         expected.add("businessMethod");
-        expected.add("Answer, 42");
+//        expected.add("Answer, 42");
+        expected.add("Answer, 54");
         expected.add("After:beanClassBusinessMethodInterceptor");
         expected.add("After:MethodLevelInterceptorTwo");
         expected.add("After:MethodLevelInterceptorOne");

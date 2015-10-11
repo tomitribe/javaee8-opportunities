@@ -39,15 +39,13 @@ public class InterceptorStack {
     }
 
     public Object invoke(final Object beanInstance, final Method targetMethod, final Object... parameters) throws Exception {
-        final Invocation invocation = new Invocation() {
-            @Override
-            public Object invoke() throws Exception {
-                return targetMethod.invoke(beanInstance, parameters);
-            }
-        };
+        return invoke(beanInstance, targetMethod, () -> targetMethod.invoke(beanInstance, parameters), parameters);
+    }
+
+    public Object invoke(final Object beanInstance, final Method targetMethod, final Invocation invocation, final Object... parameters) throws Exception {
         final Iterator<Interception> invocations = interceptions.iterator();
         final Map<String, Object> contextData = new TreeMap<>();
-        final Class<?>[] parameterTypes = targetMethod.getParameterTypes();
+        final Class<?>[] parameterTypes = (targetMethod != null) ? targetMethod.getParameterTypes() : new Class[0];
         final InvocationContext context = new InvocationContext() {
 
             @Override
@@ -100,6 +98,10 @@ public class InterceptorStack {
             }
         };
         return context.proceed();
+    }
+
+    public Object invoke(Invocation question) throws Exception {
+        return invoke(null, null, question);
     }
 
     public static class Exceptions {
