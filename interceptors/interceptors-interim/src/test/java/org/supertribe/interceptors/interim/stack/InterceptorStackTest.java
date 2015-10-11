@@ -28,8 +28,10 @@ public class InterceptorStackTest {
 
     @Test
     public void test() throws Exception {
-        final ArrayList<Interception> interceptors = new ArrayList<>();
 
+        final FullyInterceptedBean bean = new FullyInterceptedBean();
+
+        final ArrayList<Interception> interceptors = new ArrayList<>();
         interceptors.add(this::red);
         interceptors.add(this::green);
         interceptors.add(this::blue);
@@ -41,9 +43,9 @@ public class InterceptorStackTest {
         interceptors.add(new ClassLevelInterceptorTwo()::businessMethodInterceptor);
         interceptors.add(new MethodLevelInterceptorOne()::businessMethodInterceptor);
         interceptors.add(new MethodLevelInterceptorTwo()::businessMethodInterceptor);
-        interceptors.add(new FullyInterceptedBean()::beanClassBusinessMethodInterceptor);
+        interceptors.add(bean::beanClassBusinessMethodInterceptor);
 
-        final InterceptorStack stack = new InterceptorStack(new FullyInterceptedBean(), FullyInterceptedBean.class.getMethod("businessMethod", String.class, int.class), interceptors);
+        final InterceptorStack stack = new InterceptorStack(bean, FullyInterceptedBean.class.getMethod("businessMethod", String.class, int.class), interceptors);
 
         final List<String> invoke = (List<String>) stack.invoke("Question", 6 * 9);
 

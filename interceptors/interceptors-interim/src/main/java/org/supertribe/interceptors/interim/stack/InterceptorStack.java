@@ -38,13 +38,9 @@ public class InterceptorStack {
         this.interceptions = interceptions;
     }
 
-    public InvocationContext createInvocationContext(final Object... parameters) {
-        return new FunctionalInvocationContext(beanInstance, targetMethod, interceptions, parameters);
-    }
-
     public Object invoke(final Object... parameters) throws Exception {
-        final InvocationContext invocationContext = createInvocationContext(parameters);
-        return invocationContext.proceed();
+        final InvocationContext context = new FunctionalInvocationContext(beanInstance, targetMethod, interceptions, parameters);
+        return context.proceed();
     }
 
     public static class FunctionalInvocationContext implements InvocationContext {
@@ -55,6 +51,7 @@ public class InterceptorStack {
         private final Object[] parameters;
         private final Map<String, Object> contextData = new TreeMap<>();
         private final Class<?>[] parameterTypes;
+        private final Invocation invocation;
 
         public FunctionalInvocationContext(final Object target, final Method method, final List<Interception> interceptions, final Object... parameters) {
             this.target = Objects.requireNonNull(target);
@@ -63,6 +60,7 @@ public class InterceptorStack {
             this.parameterTypes = method.getParameterTypes();
 
             invocations = interceptions.iterator();
+            invocation = ()-> method.invoke(this.target, this.parameters);
         }
 
         @Override
@@ -91,38 +89,8 @@ public class InterceptorStack {
         }
 
         @Override
-        public void setParameters(final Object[] parameters) {
-            checkParameters(parameters);
-
-            for (int i = 0; i < parameters.length; i++) {
-                final Object parameter = parameters[i];
-                final Class<?> parameterType = parameterTypes[i];
-
-                if (parameter == null) {
-                    if (parameterType.isPrimitive()) {
-                        throw new IllegalArgumentException("Expected parameter " + i + " to be primitive type " + parameterType.getName() +
-                                ", but got a parameter that is null");
-                    }
-                } else {
-                    //check that types are applicable
-                    final Class<?> actual = Classes.deprimitivize(parameterType);
-                    final Class<?> given = Classes.deprimitivize(parameter.getClass());
-
-                    if (!actual.isAssignableFrom(given)) {
-                        throw new IllegalArgumentException("Expected parameter " + i + " to be of type " + parameterType.getName() +
-                                ", but got a parameter of type " + parameter.getClass().getName());
-                    }
-                }
-            }
-            System.arraycopy(parameters, 0, this.parameters, 0, parameters.length);
-        }
-
-        private void checkParameters(Object[] parameters) {
-            Objects.requireNonNull(parameters);
-
-            if (parameters.length != this.parameters.length) {
-                throw new IllegalArgumentException("Expected " + this.parameters.length + " parameters, but only got " + parameters.length + " parameters");
-            }
+        public void setParameters(final Object[] fromParameters) {
+            Parameters.overwrite(fromParameters, this.parameters, this.parameterTypes);
         }
 
         @Override
@@ -137,10 +105,10 @@ public class InterceptorStack {
                     Interception result = invocations.next();
                     return result.invoke(this);
                 } else {
-                    return method.invoke(target, parameters);
+                    return invocation.invoke();
                 }
             } catch (final InvocationTargetException e) {
-                throw unwrapInvocationTargetException(e);
+                throw unwrapCause(e);
             }
         }
 
@@ -152,7 +120,7 @@ public class InterceptorStack {
          * @return the cause of the exception
          * @throws AssertionError if the cause is not an Exception or Error.
          */
-        private Exception unwrapInvocationTargetException(final InvocationTargetException e) {
+        private Exception unwrapCause(final Exception e) {
             final Throwable cause = e.getCause();
             if (cause == null) {
                 return e;
@@ -171,4 +139,5 @@ public class InterceptorStack {
             return "InvocationContext(target=" + target.getClass().getName() + ", method=" + methodName + ")";
         }
     }
+
 }
