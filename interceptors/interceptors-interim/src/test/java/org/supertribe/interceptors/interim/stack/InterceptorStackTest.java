@@ -31,24 +31,22 @@ public class InterceptorStackTest {
     public void test() throws Exception {
 
         final FullyInterceptedBean bean = new FullyInterceptedBean();
-
-        final ArrayList<Interception> interceptors = new ArrayList<>();
-        interceptors.add(this::red);
-        interceptors.add(this::green);
-        interceptors.add(this::blue);
-        interceptors.add(new DefaultInterceptorOne()::businessMethodInterceptor);
-        interceptors.add(new DefaultInterceptorTwo()::businessMethodInterceptor);
-        interceptors.add(new ClassLevelInterceptorSuperClassOne()::businessMethodInterceptor);
-        interceptors.add(new ClassLevelInterceptorSuperClassTwo()::businessMethodInterceptor);
-        interceptors.add(new ClassLevelInterceptorOne()::businessMethodInterceptor);
-        interceptors.add(new ClassLevelInterceptorTwo()::businessMethodInterceptor);
-        interceptors.add(new MethodLevelInterceptorOne()::businessMethodInterceptor);
-        interceptors.add(new MethodLevelInterceptorTwo()::businessMethodInterceptor);
-        interceptors.add(bean::beanClassBusinessMethodInterceptor);
-
         final Method businessMethod = FullyInterceptedBean.class.getMethod("businessMethod", String.class, int.class);
-        final InterceptorStack stack = new InterceptorStack(interceptors);
-        final List<String> invoke = (List<String>) stack.invoke(bean, businessMethod, "Question", 6 * 9);
+
+        final List<String> invoke = (List<String>) new InterceptorStack()
+                .add(this::red)
+                .add(this::green)
+                .add(this::blue)
+                .add(new DefaultInterceptorOne()::businessMethodInterceptor)
+                .add(new DefaultInterceptorTwo()::businessMethodInterceptor)
+                .add(new ClassLevelInterceptorSuperClassOne()::businessMethodInterceptor)
+                .add(new ClassLevelInterceptorSuperClassTwo()::businessMethodInterceptor)
+                .add(new ClassLevelInterceptorOne()::businessMethodInterceptor)
+                .add(new ClassLevelInterceptorTwo()::businessMethodInterceptor)
+                .add(new MethodLevelInterceptorOne()::businessMethodInterceptor)
+                .add(new MethodLevelInterceptorTwo()::businessMethodInterceptor)
+                .add(bean::beanClassBusinessMethodInterceptor)
+                .invoke(bean, businessMethod, "Question", 6 * 9);
 
         final List<String> expected = new ArrayList<String>();
         expected.add("Before:Red");

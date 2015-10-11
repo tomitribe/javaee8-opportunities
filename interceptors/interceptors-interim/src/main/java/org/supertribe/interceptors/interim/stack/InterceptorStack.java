@@ -21,16 +21,21 @@ import javax.interceptor.InvocationContext;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class InterceptorStack {
-    private List<Interception> interceptions;
+    private List<Interception> interceptions = new ArrayList<>();
 
-    public InterceptorStack(final List<Interception> interceptions) {
-        this.interceptions = interceptions;
+    public InterceptorStack() {
+    }
+
+    public InterceptorStack add(Interception interception) {
+        interceptions.add(interception);
+        return this;
     }
 
     public Object invoke(final Object beanInstance, final Method targetMethod, final Object... parameters) throws Exception {
