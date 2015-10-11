@@ -21,36 +21,23 @@ import javax.interceptor.InvocationContext;
 import java.lang.reflect.Method;
 import java.util.List;
 
-/**
- * @version $Rev$ $Date$
- */
 public class InterceptorStack {
     private final Object beanInstance;
     private final List<Interceptor> interceptors;
     private final Method targetMethod;
-    private final Operation operation;
 
-    public InterceptorStack(final Object beanInstance, final Method targetMethod, final Operation operation, final List<Interceptor> interceptors) {
+    public InterceptorStack(final Object beanInstance, final Method targetMethod, final List<Interceptor> interceptors) {
         this.beanInstance = beanInstance;
         this.targetMethod = targetMethod;
-        this.operation = operation;
         this.interceptors = interceptors;
     }
 
     public InvocationContext createInvocationContext(final Object... parameters) {
-        return new ReflectionInvocationContext(operation, interceptors, beanInstance, targetMethod, parameters);
+        return new ReflectionInvocationContext(interceptors, beanInstance, targetMethod, parameters);
     }
 
     public Object invoke(final Object... parameters) throws Exception {
         final InvocationContext invocationContext = createInvocationContext(parameters);
         return invocationContext.proceed();
-    }
-
-    public Object invoke(final javax.xml.ws.handler.MessageContext messageContext, final Object... parameters) throws Exception {
-        return null;
-    }
-
-    public Object invoke(final javax.xml.rpc.handler.MessageContext messageContext, final Object... parameters) throws Exception {
-        return null;
     }
 }

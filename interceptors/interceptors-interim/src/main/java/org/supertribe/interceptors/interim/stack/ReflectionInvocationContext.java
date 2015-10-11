@@ -35,10 +35,7 @@ public class ReflectionInvocationContext implements InvocationContext {
     private final Map<String, Object> contextData = new TreeMap<>();
     private final Class<?>[] parameterTypes;
 
-    private final Operation operation;
-
-    public ReflectionInvocationContext(final Operation operation, final List<Interceptor> interceptors, final Object target, final Method method, final Object... parameters) {
-        this.operation = Objects.requireNonNull(operation);
+    public ReflectionInvocationContext(final List<Interceptor> interceptors, final Object target, final Method method, final Object... parameters) {
         this.interceptors = Objects.requireNonNull(interceptors).iterator();
         this.target = Objects.requireNonNull(target);
         this.method = Objects.requireNonNull(method);
@@ -192,6 +189,6 @@ public class ReflectionInvocationContext implements InvocationContext {
     public String toString() {
         final String methodName = method != null ? method.getName() : null;
 
-        return "InvocationContext(operation=" + operation + ", target=" + target.getClass().getName() + ", method=" + methodName + ")";
+        return "InvocationContext(target=" + target.getClass().getName() + ", method=" + methodName + ")";
     }
 }
