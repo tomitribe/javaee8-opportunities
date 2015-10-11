@@ -14,7 +14,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.schedule.expression.now;
+package org.supertribe.interceptors.interim.stack;
 
-public class MainTest {
+import javax.interceptor.InvocationContext;
+
+@FunctionalInterface
+public interface Interception {
+    Object invoke(InvocationContext invocationContext) throws Exception;
 }

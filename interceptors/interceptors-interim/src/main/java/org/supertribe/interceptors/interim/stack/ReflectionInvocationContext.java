@@ -30,7 +30,7 @@ import java.util.TreeMap;
 
 public class ReflectionInvocationContext implements InvocationContext {
 
-    private final Iterator<Invocation> invocations;
+    private final Iterator<Interception> invocations;
     private final Object target;
     private final Method method;
     private final Object[] parameters;
@@ -43,12 +43,17 @@ public class ReflectionInvocationContext implements InvocationContext {
         this.parameters = Objects.requireNonNull(parameters);
         this.parameterTypes = method.getParameterTypes();
 
-        final List<Invocation> list = new ArrayList<>();
-        for (final Interceptor interceptor : interceptors) {
-            list.add(new InterceptorInvocation(interceptor.getInstance(), interceptor.getMethod(), this));
-        }
+        final List<Interception> list = toInterceptors(interceptors);
 
         invocations = list.iterator();
+    }
+
+    private static List<Interception> toInterceptors(List<Interceptor> interceptors) {
+        final List<Interception> list = new ArrayList<>();
+        for (final Interceptor interceptor : interceptors) {
+            list.add(new InterceptionImpl(interceptor.getInstance(), interceptor.getMethod()));
+        }
+        return list;
     }
 
     @Override
@@ -120,8 +125,8 @@ public class ReflectionInvocationContext implements InvocationContext {
     public Object proceed() throws Exception {
         try {
             if (invocations.hasNext()) {
-                Invocation result = invocations.next();
-                return result.invoke();
+                Interception result = invocations.next();
+                return result.invoke(this);
             } else {
                 return method.invoke(target, parameters);
             }
@@ -130,36 +135,23 @@ public class ReflectionInvocationContext implements InvocationContext {
         }
     }
 
-    private abstract static class Invocation {
+    private static class InterceptionImpl implements Interception {
         private final Method method;
-        private final Object[] args;
         private final Object target;
 
-        public Invocation(final Object target, final Method method, final Object[] args) {
+        public InterceptionImpl(final Object target, final Method method) {
             this.target = target;
             this.method = method;
-            this.args = args;
         }
 
-        public Object invoke() throws Exception {
-            return method.invoke(target, args);
+        @Override
+        public Object invoke(InvocationContext invocationContext) throws Exception {
+            return method.invoke(target, invocationContext);
         }
 
 
         public String toString() {
             return method.getDeclaringClass().getName() + "." + method.getName();
-        }
-    }
-
-    private static class BeanInvocation extends Invocation {
-        public BeanInvocation(final Object target, final Method method, final Object[] args) {
-            super(target, method, args);
-        }
-    }
-
-    private static class InterceptorInvocation extends Invocation {
-        public InterceptorInvocation(final Object target, final Method method, final InvocationContext invocationContext) {
-            super(target, method, new Object[]{invocationContext});
         }
     }
 

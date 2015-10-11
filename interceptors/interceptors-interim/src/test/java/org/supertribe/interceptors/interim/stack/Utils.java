@@ -20,13 +20,10 @@ import javax.interceptor.InvocationContext;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @version $Rev$ $Date$
- */
 public class Utils {
 
     public static List<String> addClassSimpleName(final InvocationContext ic, final String classSimpleName) throws Exception {
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
 
         list.add("Before:" + classSimpleName);
         list.addAll((List<String>) ic.proceed());
