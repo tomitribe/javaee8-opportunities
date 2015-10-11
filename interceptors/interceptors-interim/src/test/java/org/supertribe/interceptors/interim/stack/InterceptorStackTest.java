@@ -23,6 +23,7 @@ import org.junit.Test;
 import javax.interceptor.InvocationContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class InterceptorStackTest {
 
@@ -45,17 +46,26 @@ public class InterceptorStackTest {
         final List<String> invoke = (List<String>) stack.invoke(42, "Answer");
 
         final List<String> expected = new ArrayList<String>();
-        expected.add("DefaultInterceptorOne");
-        expected.add("DefaultInterceptorTwo");
-        expected.add("ClassLevelInterceptorSuperClassOne");
-        expected.add("ClassLevelInterceptorSuperClassTwo");
-        expected.add("ClassLevelInterceptorOne");
-        expected.add("ClassLevelInterceptorTwo");
-        expected.add("MethodLevelInterceptorOne");
-        expected.add("MethodLevelInterceptorTwo");
-        expected.add("beanClassBusinessMethodInterceptor");
+        expected.add("Before:DefaultInterceptorOne");
+        expected.add("Before:DefaultInterceptorTwo");
+        expected.add("Before:ClassLevelInterceptorSuperClassOne");
+        expected.add("Before:ClassLevelInterceptorSuperClassTwo");
+        expected.add("Before:ClassLevelInterceptorOne");
+        expected.add("Before:ClassLevelInterceptorTwo");
+        expected.add("Before:MethodLevelInterceptorOne");
+        expected.add("Before:MethodLevelInterceptorTwo");
+        expected.add("Before:beanClassBusinessMethodInterceptor");
         expected.add("businessMethod");
         expected.add("42, Answer");
+        expected.add("After:beanClassBusinessMethodInterceptor");
+        expected.add("After:MethodLevelInterceptorTwo");
+        expected.add("After:MethodLevelInterceptorOne");
+        expected.add("After:ClassLevelInterceptorTwo");
+        expected.add("After:ClassLevelInterceptorOne");
+        expected.add("After:ClassLevelInterceptorSuperClassTwo");
+        expected.add("After:ClassLevelInterceptorSuperClassOne");
+        expected.add("After:DefaultInterceptorTwo");
+        expected.add("After:DefaultInterceptorOne");
 
         Assert.assertEquals(Join.join("\n", invoke), Join.join("\n", expected));
     }

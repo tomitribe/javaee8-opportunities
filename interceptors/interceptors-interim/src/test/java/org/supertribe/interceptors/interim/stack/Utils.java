@@ -27,11 +27,15 @@ public class Utils {
 
     public static List<String> addClassSimpleName(final InvocationContext ic, final String classSimpleName) throws Exception {
         final List<String> list = new ArrayList<String>();
-        list.add(classSimpleName);
-        final List<String> listOfStrings = (List<String>) ic.proceed();
-        if (listOfStrings != null) {
-            list.addAll(listOfStrings);
+        list.add("Before:" + classSimpleName);
+
+        final List<String> result = (List<String>) ic.proceed();
+
+        if (result != null) {
+            list.addAll(result);
         }
+
+        list.add("After:" + classSimpleName);
         return list;
     }
 
