@@ -16,5 +16,19 @@
  */
 package org.supertribe.bean.validation.now;
 
-public class MainTest {
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import java.io.File;
+
+public class ExistsConstraint implements ConstraintValidator<Exists, File> {
+
+    @Override
+    public void initialize(Exists constraintAnnotation) {
+
+    }
+
+    @Override
+    public boolean isValid(File value, ConstraintValidatorContext context) {
+        return value.exists();
+    }
 }

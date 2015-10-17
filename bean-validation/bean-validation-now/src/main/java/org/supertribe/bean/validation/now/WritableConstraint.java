@@ -16,5 +16,19 @@
  */
 package org.supertribe.bean.validation.now;
 
-public class Main {
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import java.io.File;
+
+public class WritableConstraint implements ConstraintValidator<Writable, File> {
+
+    @Override
+    public void initialize(Writable constraintAnnotation) {
+
+    }
+
+    @Override
+    public boolean isValid(File value, ConstraintValidatorContext context) {
+        return value.canWrite();
+    }
 }
