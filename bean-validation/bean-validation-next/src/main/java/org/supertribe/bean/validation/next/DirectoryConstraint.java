@@ -17,16 +17,12 @@
 package org.supertribe.bean.validation.next;
 
 import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.io.File;
 
 public class DirectoryConstraint implements ConstraintValidator<Directory, File> {
-    @Override
-    public void initialize(Directory constraintAnnotation) {
-    }
 
     @Override
-    public boolean isValid(File value, ConstraintValidatorContext context) {
+    public boolean isValid(File value) {
         return value.isDirectory();
     }
 }

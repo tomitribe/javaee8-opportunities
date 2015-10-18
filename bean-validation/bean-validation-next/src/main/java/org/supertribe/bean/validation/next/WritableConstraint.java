@@ -17,18 +17,12 @@
 package org.supertribe.bean.validation.next;
 
 import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.io.File;
 
 public class WritableConstraint implements ConstraintValidator<Writable, File> {
 
     @Override
-    public void initialize(Writable constraintAnnotation) {
-
-    }
-
-    @Override
-    public boolean isValid(File value, ConstraintValidatorContext context) {
+    public boolean isValid(File value) {
         return value.canWrite();
     }
 }

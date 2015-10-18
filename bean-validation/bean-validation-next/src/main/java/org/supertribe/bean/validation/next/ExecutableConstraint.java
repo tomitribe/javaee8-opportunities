@@ -17,18 +17,12 @@
 package org.supertribe.bean.validation.next;
 
 import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.io.File;
 
 public class ExecutableConstraint implements ConstraintValidator<Executable, File> {
 
     @Override
-    public void initialize(Executable constraintAnnotation) {
-
-    }
-
-    @Override
-    public boolean isValid(File value, ConstraintValidatorContext context) {
+    public boolean isValid(File value) {
         return value.canExecute();
     }
 }
