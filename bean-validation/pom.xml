@@ -18,8 +18,8 @@
 
   <modules>
     <module>bean-validation-now</module>
-    <module>bean-validation-next</module>
     <module>bean-validation-next1</module>
+    <module>bean-validation-next2</module>
   </modules>
 
 

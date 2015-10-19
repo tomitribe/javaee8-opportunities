@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.supertribe.bean.validation.next;
+package org.supertribe.bean.validation.next2;
 
 import javax.validation.Payload;
 import java.lang.annotation.Documented;

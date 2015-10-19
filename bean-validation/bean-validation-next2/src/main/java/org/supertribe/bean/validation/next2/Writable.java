@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.supertribe.bean.validation.next;
+package org.supertribe.bean.validation.next2;
 
 import javax.validation.Payload;
 import java.lang.annotation.Documented;
@@ -31,11 +31,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @javax.validation.Constraint(validatedBy = {})
 @Target({METHOD, FIELD, ANNOTATION_TYPE, PARAMETER})
 @Retention(RUNTIME)
-public @interface Executable {
+public @interface Writable {
 
     Class<?>[] groups() default {};
 
-    String message() default "{org.supertribe.validation.Executable.message}";
+    String message() default "{org.supertribe.validation.Writable.message}";
 
     Class<? extends Payload>[] payload() default {};
 
