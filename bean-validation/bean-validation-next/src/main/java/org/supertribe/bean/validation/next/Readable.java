@@ -28,7 +28,7 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Documented
-@javax.validation.Constraint(validatedBy = {ReadableConstraint.class})
+@javax.validation.Constraint(validatedBy = {})
 @Target({METHOD, FIELD, ANNOTATION_TYPE, PARAMETER})
 @Retention(RUNTIME)
 public @interface Readable {

@@ -29,7 +29,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Exists
 @Documented
-@javax.validation.Constraint(validatedBy = {DirectoryConstraint.class})
+@javax.validation.Constraint(validatedBy = {})
 @Target({METHOD, FIELD, ANNOTATION_TYPE, PARAMETER})
 @Retention(RUNTIME)
 public @interface Directory {

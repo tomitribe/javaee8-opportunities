@@ -14,7 +14,19 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.bean.validation.interim;
+package org.supertribe.bean.validation.next1;
 
-public class MainTest {
+import javax.validation.ConstraintValidator;
+import java.io.File;
+
+public class ExistsConstraint implements ConstraintValidator<Exists, File> {
+
+    public ExistsConstraint() {
+        System.out.println();
+    }
+
+    @Override
+    public boolean isValid(File value) {
+        return value.exists();
+    }
 }

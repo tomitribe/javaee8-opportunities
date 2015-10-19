@@ -14,19 +14,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.bean.validation.next;
+package org.supertribe.bean.validation.next1;
 
 import javax.validation.ConstraintValidator;
 import java.io.File;
 
-public class ExistsConstraint implements ConstraintValidator<Exists, File> {
-
-    public ExistsConstraint() {
-        System.out.println();
-    }
+public class ExecutableConstraint implements ConstraintValidator<Executable, File> {
 
     @Override
     public boolean isValid(File value) {
-        return value.exists();
+        return value.canExecute();
     }
 }

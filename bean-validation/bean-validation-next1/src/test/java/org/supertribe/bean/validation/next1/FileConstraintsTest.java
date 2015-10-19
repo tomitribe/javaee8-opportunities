@@ -14,13 +14,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.bean.validation.next;
+package org.supertribe.bean.validation.next1;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorFactory;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -98,30 +96,17 @@ public class FileConstraintsTest extends Assert {
 
             @Exists
             final File nonExistent = Files.createTempFile("test", ".tmp", perms("rw-rw-rw-")).toFile();
-
             {
                 assertTrue(nonExistent.delete());
             }
 
         }, "Does not exist");
-
-
     }
+
+
 
     private void assertConstraints(final Object object, final String... violations) {
         final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-
-        // ----  The new part ------------//
-        final ConstraintValidatorFactory cvf = factory.getConstraintValidatorFactory();
-
-        cvf.register(Directory.class, (ConstraintValidator<Directory, File>) File::isDirectory);
-        cvf.register(Executable.class, (ConstraintValidator<Executable, File>) File::canExecute);
-        cvf.register(Exists.class, (ConstraintValidator<Exists, File>) File::exists);
-        cvf.register(Readable.class, (ConstraintValidator<Readable, File>) File::canRead);
-        cvf.register(Writable.class, (ConstraintValidator<Writable, File>) File::canWrite);
-        // -------------------------------//
-
-
         final Validator validator = factory.getValidator();
 
         final Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object);
