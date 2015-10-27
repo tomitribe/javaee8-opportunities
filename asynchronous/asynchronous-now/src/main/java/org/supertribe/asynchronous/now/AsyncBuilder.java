@@ -16,5 +16,24 @@
  */
 package org.supertribe.asynchronous.now;
 
-public class MainTest {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+public class AsyncBuilder<T> {
+
+    private final Async async;
+    private final List<Future<T>> list = new ArrayList<>();
+
+    public AsyncBuilder(Async async) {
+        this.async = async;
+    }
+
+    public <I> AsyncBuilder<T> async(final Function<I, T>runnable, I input) {
+        return null;
+    }
+
+//    public Supplier<T>
 }
