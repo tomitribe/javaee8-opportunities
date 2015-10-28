@@ -14,14 +14,26 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.interceptors.interim.stack;
+package org.supertribe.interceptors.interim;
 
-import javax.interceptor.Interceptors;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
+import javax.interceptor.InvocationContext;
+
+import static org.supertribe.interceptors.interim.Utils.subtractTwo;
+import static org.supertribe.interceptors.interim.Utils.wrapResult;
 
 /**
  * @version $Rev$ $Date$
  */
-@Interceptors({ClassLevelInterceptorSuperClassOne.class, ClassLevelInterceptorSuperClassTwo.class})
-public class FullyInterceptedSuperClass {
+@Interceptor
+@Red
+public class RedInterceptor {
+
+    @AroundInvoke
+    public Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
+        subtractTwo(ic);
+        return wrapResult(ic, "Red");
+    }
 
 }

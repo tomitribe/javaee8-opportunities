@@ -14,23 +14,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.interceptors.interim.stack;
+package org.supertribe.interceptors.interim;
 
-import javax.ejb.Stateless;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptors;
-import javax.interceptor.InvocationContext;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @version $Rev$ $Date$
  */
-@Stateless
-@Interceptors({ClassLevelInterceptorOne.class, ClassLevelInterceptorTwo.class})
 public class FullyInterceptedBean extends FullyInterceptedSuperClass {
 
-    @Interceptors({MethodLevelInterceptorOne.class, MethodLevelInterceptorTwo.class})
     public List<String> businessMethod(String string, int i) {
         final List<String> list = new ArrayList<>();
         list.add("businessMethod");
@@ -38,15 +31,9 @@ public class FullyInterceptedBean extends FullyInterceptedSuperClass {
         return list;
     }
 
-    @Interceptors({MethodLevelInterceptorOne.class, MethodLevelInterceptorTwo.class})
     public List<String> methodWithDefaultInterceptorsExcluded() {
         final List<String> list = new ArrayList<String>();
         list.add("methodWithDefaultInterceptorsExcluded");
         return list;
-    }
-
-    @AroundInvoke
-    public Object beanClassBusinessMethodInterceptor(final InvocationContext ic) throws Exception {
-        return Utils.addClassSimpleName(ic, "beanClassBusinessMethodInterceptor");
     }
 }

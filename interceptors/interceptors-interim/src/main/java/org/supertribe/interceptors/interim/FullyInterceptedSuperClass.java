@@ -14,18 +14,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.interceptors.interim.stack;
+package org.supertribe.interceptors.interim;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
+import javax.interceptor.Interceptors;
 
 /**
  * @version $Rev$ $Date$
  */
-public class MethodLevelInterceptorTwo {
+public class FullyInterceptedSuperClass {
 
-    @AroundInvoke
-    public Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
-        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
-    }
 }

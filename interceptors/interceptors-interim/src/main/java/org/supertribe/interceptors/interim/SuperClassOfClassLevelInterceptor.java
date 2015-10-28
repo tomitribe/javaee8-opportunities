@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,20 +16,29 @@
  */
 package org.supertribe.interceptors.interim;
 
-import javax.ejb.Lock;
-import javax.ejb.LockType;
-import javax.ejb.Singleton;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import org.supertribe.interceptors.interim.Utils;
+
+import javax.annotation.PostConstruct;
+import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 
-@Singleton
-@Lock(LockType.READ)
-public class Transactions {
+import static org.supertribe.interceptors.interim.Utils.subtractTwo;
+import static org.supertribe.interceptors.interim.Utils.wrapResult;
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public Object transaction(InvocationContext invocationContext) throws Exception {
-        return invocationContext.proceed();
+/**
+ * @version $Rev$ $Date$
+ */
+public class SuperClassOfClassLevelInterceptor {
+
+    @AroundInvoke
+    protected Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
+        subtractTwo(ic);
+        return wrapResult(ic, this.getClass().getSimpleName());
     }
 
+    @PostConstruct
+    protected void postConstructInterceptor(final InvocationContext ic) throws Exception {
+        subtractTwo(ic);
+        wrapResult(ic, this.getClass().getSimpleName());
+    }
 }

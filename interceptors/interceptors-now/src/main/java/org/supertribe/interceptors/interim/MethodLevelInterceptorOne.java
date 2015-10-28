@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,5 +16,23 @@
  */
 package org.supertribe.interceptors.interim;
 
-public class MainTest {
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
+import javax.interceptor.InvocationContext;
+
+import static org.supertribe.interceptors.interim.Utils.subtractTwo;
+import static org.supertribe.interceptors.interim.Utils.wrapResult;
+
+/**
+ * @version $Rev$ $Date$
+ */
+@MethodLevelInterceptor
+@Interceptor
+public class MethodLevelInterceptorOne {
+
+    @AroundInvoke
+    public Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
+        subtractTwo(ic);
+        return wrapResult(ic, this.getClass().getSimpleName());
+    }
 }

@@ -20,7 +20,6 @@ import org.apache.openejb.util.Join;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.supertribe.interceptors.interim.FullyIntercepted;
 import org.supertribe.interceptors.interim.FullyInterceptedBean;
 
 import javax.ejb.embeddable.EJBContainer;
@@ -31,7 +30,6 @@ import java.util.List;
 public class InterceptableTest {
 
     @Inject
-    @FullyIntercepted
     private FullyInterceptedBean bean;
 
     @Before

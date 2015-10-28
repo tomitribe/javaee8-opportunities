@@ -14,24 +14,26 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.interceptors.interim.stack;
+package org.supertribe.interceptors.interim;
 
-import javax.annotation.PostConstruct;
 import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+
+import static org.supertribe.interceptors.interim.Utils.subtractTwo;
+import static org.supertribe.interceptors.interim.Utils.wrapResult;
 
 /**
  * @version $Rev$ $Date$
  */
-public class DefaultInterceptorOne {
+@Interceptor
+@ClassLevelInterceptor
+public class ClassLevelInterceptorOne {
 
     @AroundInvoke
     public Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
-        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+        subtractTwo(ic);
+        return wrapResult(ic, this.getClass().getSimpleName());
     }
 
-    @PostConstruct
-    protected void postConstructInterceptor(final InvocationContext ic) throws Exception {
-        Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
-    }
 }
