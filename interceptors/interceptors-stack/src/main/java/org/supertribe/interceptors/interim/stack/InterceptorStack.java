@@ -97,8 +97,8 @@ public class InterceptorStack {
         return context.proceed();
     }
 
-    public Object invoke(Invocation question) throws Exception {
-        return invoke(null, null, question);
+    public Object invoke(Invocation invocation) throws Exception {
+        return invoke(null, null, invocation);
     }
 
     public static class Exceptions {
