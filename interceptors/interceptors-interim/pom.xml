@@ -29,4 +29,11 @@
   <version>1.0-SNAPSHOT</version>
   <name>Java EE :: Opportunities :: Interceptors (Interim)</name>
 
+  <dependencies>
+      <dependency>
+          <groupId>org.apache.xbean</groupId>
+          <artifactId>xbean-asm5-shaded</artifactId>
+          <version>4.2</version>
+      </dependency>
+  </dependencies>
 </project>

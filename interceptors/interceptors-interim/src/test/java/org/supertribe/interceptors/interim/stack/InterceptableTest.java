@@ -44,7 +44,7 @@ public class InterceptableTest {
                 .add(new MethodLevelInterceptorTwo()::businessMethodInterceptor)
                 .build();
 
-        bean.businessMethod("Question", 6 * 9);
+        final List<String> invoke = bean.businessMethod("Question", 6 * 9);
 
         final List<String> expected = new ArrayList<String>();
         expected.add("Before:Red");
@@ -59,6 +59,7 @@ public class InterceptableTest {
         expected.add("Before:MethodLevelInterceptorOne");
         expected.add("Before:MethodLevelInterceptorTwo");
         expected.add("Before:MethodLevelInterceptorTwo");
+        expected.add("businessMethod");
         expected.add("Answer, 42");
         expected.add("After:MethodLevelInterceptorTwo");
         expected.add("After:MethodLevelInterceptorTwo");
