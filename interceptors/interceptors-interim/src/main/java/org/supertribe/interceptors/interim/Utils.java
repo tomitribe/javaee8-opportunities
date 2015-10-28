@@ -22,20 +22,21 @@ import java.util.List;
 
 public class Utils {
 
-    public static List<String> addClassSimpleName(final InvocationContext ic, final String classSimpleName) throws Exception {
-        final Object[] parameters = ic.getParameters();
-        if (parameters.length > 1 && parameters[1] instanceof Integer) {
-            parameters[1] = ((int) parameters[1]) - 2;
-            ic.setParameters(parameters);
-        }
-
+    public static List<String> wrapResult(final InvocationContext context, final String interceptorName) throws Exception {
         final List<String> list = new ArrayList<>();
 
-        list.add("Before:" + classSimpleName);
-        list.addAll((List<String>) ic.proceed());
-        list.add("After:" + classSimpleName);
-
+        list.add("Before:" + interceptorName);
+        list.addAll((List<String>) context.proceed());
+        list.add("After:" + interceptorName);
         return list;
+    }
+
+    public static void subtractTwo(final InvocationContext context) {
+        final Object[] parameters = context.getParameters();
+        if (parameters.length > 1 && parameters[1] instanceof Integer) {
+            parameters[1] = ((int) parameters[1]) - 2;
+            context.setParameters(parameters);
+        }
     }
 
 }

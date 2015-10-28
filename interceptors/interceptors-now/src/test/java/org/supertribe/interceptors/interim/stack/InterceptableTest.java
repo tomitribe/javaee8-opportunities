@@ -42,8 +42,8 @@ public class InterceptableTest {
         final List<String> invoke = bean.businessMethod("Question", 6 * 9);
 
         final List<String> expected = new ArrayList<String>();
-        expected.add("Before:RedInterceptor");
-        expected.add("Before:GreenInterceptor");
+        expected.add("Before:Red");
+        expected.add("Before:Green");
         expected.add("Before:DefaultInterceptorOne");
         expected.add("Before:ClassLevelInterceptorSuperClassOne");
         expected.add("Before:ClassLevelInterceptorOne");
@@ -54,8 +54,8 @@ public class InterceptableTest {
         expected.add("After:ClassLevelInterceptorOne");
         expected.add("After:ClassLevelInterceptorSuperClassOne");
         expected.add("After:DefaultInterceptorOne");
-        expected.add("After:GreenInterceptor");
-        expected.add("After:RedInterceptor");
+        expected.add("After:Green");
+        expected.add("After:Red");
 
         Assert.assertEquals(Join.join("\n", expected), Join.join("\n", invoke));
     }

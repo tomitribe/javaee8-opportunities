@@ -19,6 +19,9 @@ package org.supertribe.interceptors.interim;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 
+import static org.supertribe.interceptors.interim.Utils.subtractTwo;
+import static org.supertribe.interceptors.interim.Utils.wrapResult;
+
 /**
  * @version $Rev$ $Date$
  */
@@ -26,6 +29,7 @@ public class MethodLevelInterceptorOne {
 
     @AroundInvoke
     public Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
-        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+        subtractTwo(ic);
+        return wrapResult(ic, this.getClass().getSimpleName());
     }
 }

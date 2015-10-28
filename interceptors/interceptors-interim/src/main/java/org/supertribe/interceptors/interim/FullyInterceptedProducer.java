@@ -21,6 +21,11 @@ import org.supertribe.interceptors.interim.stack.Interceptable;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.interceptor.InvocationContext;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.supertribe.interceptors.interim.Utils.subtractTwo;
+import static org.supertribe.interceptors.interim.Utils.wrapResult;
 
 public class FullyInterceptedProducer {
 
@@ -39,10 +44,12 @@ public class FullyInterceptedProducer {
     }
 
     public Object red(InvocationContext context) throws Exception {
-        return Utils.addClassSimpleName(context, "Red");
+        subtractTwo(context);
+        return wrapResult(context, "Red");
     }
 
     public Object green(InvocationContext context) throws Exception {
-        return Utils.addClassSimpleName(context, "Green");
+        subtractTwo(context);
+        return wrapResult(context, "Green");
     }
 }
