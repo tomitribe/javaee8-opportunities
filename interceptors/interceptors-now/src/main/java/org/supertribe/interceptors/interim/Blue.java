@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Target({ElementType.TYPE, ElementType.METHOD})
-public @interface DefaultInterceptor {
+public @interface Blue {
 }

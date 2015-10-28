@@ -2,9 +2,7 @@
     <interceptors>
         <class>org.supertribe.interceptors.interim.RedInterceptor</class>
         <class>org.supertribe.interceptors.interim.GreenInterceptor</class>
-        <class>org.supertribe.interceptors.interim.DefaultInterceptorOne</class>
-        <class>org.supertribe.interceptors.interim.ClassLevelInterceptorSuperClassOne</class>
-        <class>org.supertribe.interceptors.interim.ClassLevelInterceptorOne</class>
-        <class>org.supertribe.interceptors.interim.MethodLevelInterceptorOne</class>
+        <class>org.supertribe.interceptors.interim.BlueInterceptor</class>
+        <class>org.supertribe.interceptors.interim.OrangeInterceptor</class>
     </interceptors>
 </beans>
