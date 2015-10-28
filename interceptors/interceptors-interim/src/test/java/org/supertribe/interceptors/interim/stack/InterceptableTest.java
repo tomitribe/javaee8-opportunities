@@ -18,74 +18,45 @@ package org.supertribe.interceptors.interim.stack;
 
 import org.apache.openejb.util.Join;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
-import javax.interceptor.InvocationContext;
+import javax.ejb.embeddable.EJBContainer;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InterceptableTest {
 
+    @Inject
+    @JustCreateIt
+    private FullyInterceptedBean bean;
+
+    @Before
+    public void setUp() throws Exception {
+        EJBContainer.createEJBContainer().getContext().bind("inject", this);
+    }
+
     @Test
     public void test() throws Exception {
-
-        final FullyInterceptedBean bean = Interceptable.of(new FullyInterceptedBean())
-                .add(this::red)
-                .add(this::green)
-                .add(this::blue)
-                .add(new DefaultInterceptorOne()::businessMethodInterceptor)
-                .add(new DefaultInterceptorTwo()::businessMethodInterceptor)
-                .add(new ClassLevelInterceptorSuperClassOne()::businessMethodInterceptor)
-                .add(new ClassLevelInterceptorSuperClassTwo()::businessMethodInterceptor)
-                .add(new ClassLevelInterceptorOne()::businessMethodInterceptor)
-                .add(new ClassLevelInterceptorTwo()::businessMethodInterceptor)
-                .add(new MethodLevelInterceptorOne()::businessMethodInterceptor)
-                .add(new MethodLevelInterceptorTwo()::businessMethodInterceptor)
-                .add(new MethodLevelInterceptorTwo()::businessMethodInterceptor)
-                .build();
-
         final List<String> invoke = bean.businessMethod("Question", 6 * 9);
 
         final List<String> expected = new ArrayList<String>();
         expected.add("Before:Red");
         expected.add("Before:Green");
-        expected.add("Before:Blue");
         expected.add("Before:DefaultInterceptorOne");
-        expected.add("Before:DefaultInterceptorTwo");
         expected.add("Before:ClassLevelInterceptorSuperClassOne");
-        expected.add("Before:ClassLevelInterceptorSuperClassTwo");
         expected.add("Before:ClassLevelInterceptorOne");
-        expected.add("Before:ClassLevelInterceptorTwo");
         expected.add("Before:MethodLevelInterceptorOne");
-        expected.add("Before:MethodLevelInterceptorTwo");
-        expected.add("Before:MethodLevelInterceptorTwo");
         expected.add("businessMethod");
         expected.add("Answer, 42");
-        expected.add("After:MethodLevelInterceptorTwo");
-        expected.add("After:MethodLevelInterceptorTwo");
         expected.add("After:MethodLevelInterceptorOne");
-        expected.add("After:ClassLevelInterceptorTwo");
         expected.add("After:ClassLevelInterceptorOne");
-        expected.add("After:ClassLevelInterceptorSuperClassTwo");
         expected.add("After:ClassLevelInterceptorSuperClassOne");
-        expected.add("After:DefaultInterceptorTwo");
         expected.add("After:DefaultInterceptorOne");
-        expected.add("After:Blue");
         expected.add("After:Green");
         expected.add("After:Red");
 
-        Assert.assertEquals(Join.join("\n", invoke), Join.join("\n", expected));
-    }
-
-    public Object red(InvocationContext context) throws Exception {
-        return Utils.addClassSimpleName(context, "Red");
-    }
-
-    public Object green(InvocationContext context) throws Exception {
-        return Utils.addClassSimpleName(context, "Green");
-    }
-
-    public Object blue(InvocationContext context) throws Exception {
-        return Utils.addClassSimpleName(context, "Blue");
+        Assert.assertEquals(Join.join("\n", expected), Join.join("\n", invoke));
     }
 }

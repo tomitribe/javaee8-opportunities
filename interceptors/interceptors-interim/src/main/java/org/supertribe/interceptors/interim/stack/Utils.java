@@ -25,7 +25,7 @@ public class Utils {
     public static List<String> addClassSimpleName(final InvocationContext ic, final String classSimpleName) throws Exception {
         final Object[] parameters = ic.getParameters();
         if (parameters.length > 1 && parameters[1] instanceof Integer) {
-            parameters[1] = ((int) parameters[1]) - 1;
+            parameters[1] = ((int) parameters[1]) - 2;
             ic.setParameters(parameters);
         }
 

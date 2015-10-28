@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,12 +16,16 @@
  */
 package org.supertribe.interceptors.interim.stack;
 
-import javax.interceptor.Interceptors;
+import javax.inject.Qualifier;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/**
- * @version $Rev$ $Date$
- */
-@Interceptors({ClassLevelInterceptorSuperClassOne.class, ClassLevelInterceptorSuperClassTwo.class})
-public class FullyInterceptedSuperClass {
-
+@Qualifier
+@Inherited
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.FIELD})
+public @interface JustCreateIt {
 }
