@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-public class Main {
+public class ApplicationBootstrap {
 
     public void somecode() {
         {
@@ -35,7 +35,7 @@ public class Main {
             addObserver((Consumer<Thread>) thread -> Runtime.getRuntime().addShutdownHook(thread));
 
             addObserver((Consumer<Runnable>) Executors.newFixedThreadPool(3)::submit);
-            addObserver(Main::consume);
+            addObserver(ApplicationBootstrap::consume);
         }
 
         {
