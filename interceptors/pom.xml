@@ -18,7 +18,8 @@
 
   <modules>
     <module>interceptors-now</module>
-    <module>interceptors-next</module>
+    <module>interceptors-stack</module>
+    <module>interceptors-proxy</module>
     <module>interceptors-interim</module>
   </modules>
 
