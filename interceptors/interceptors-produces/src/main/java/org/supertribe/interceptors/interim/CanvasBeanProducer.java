@@ -14,51 +14,32 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.interceptors.interim.stack;
-
-import org.apache.openejb.util.Join;
-import org.junit.Assert;
-import org.junit.Test;
-import org.supertribe.interceptors.interim.Blue;
-import org.supertribe.interceptors.interim.Green;
-import org.supertribe.interceptors.interim.CanvasBean;
-import org.supertribe.interceptors.interim.Red;
+package org.supertribe.interceptors.interim;
 
 import javax.interceptor.Interceptable;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.supertribe.interceptors.interim.Utils.subtractThree;
 import static org.supertribe.interceptors.interim.Utils.wrapResult;
 
-public class InterceptableTest {
+public class CanvasBeanProducer {
 
-    @Test
-    public void test() throws Exception {
+    @Inject
+    private Red red;
 
-        final CanvasBean bean = Interceptable.of(new CanvasBean())
-                .add(new Red()::businessMethodInterceptor)
+    @ApplicationScoped
+    @Produces
+    public CanvasBean create() {
+        return Interceptable.of(new CanvasBean())
+                .add(red::businessMethodInterceptor)
                 .add(new Green()::businessMethodInterceptor)
                 .add(new Blue()::businessMethodInterceptor)
                 .add(this::orange)
                 .build();
-
-        final List<String> invoke = bean.businessMethod("Question", 6 * 9);
-
-        final List<String> expected = new ArrayList<String>();
-        expected.add("Before:Red");
-        expected.add("Before:Green");
-        expected.add("Before:Blue");
-        expected.add("Before:Orange");
-        expected.add("businessMethod");
-        expected.add("Answer, 42");
-        expected.add("After:Orange");
-        expected.add("After:Blue");
-        expected.add("After:Green");
-        expected.add("After:Red");
-
-        Assert.assertEquals(Join.join("\n", expected), Join.join("\n", invoke));
     }
 
     public Object orange (InvocationContext ic) throws Exception {

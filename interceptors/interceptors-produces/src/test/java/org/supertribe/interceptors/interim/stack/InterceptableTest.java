@@ -18,32 +18,27 @@ package org.supertribe.interceptors.interim.stack;
 
 import org.apache.openejb.util.Join;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import org.supertribe.interceptors.interim.Blue;
-import org.supertribe.interceptors.interim.Green;
 import org.supertribe.interceptors.interim.CanvasBean;
-import org.supertribe.interceptors.interim.Red;
 
-import javax.interceptor.Interceptable;
-import javax.interceptor.InvocationContext;
+import javax.ejb.embeddable.EJBContainer;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.supertribe.interceptors.interim.Utils.subtractThree;
-import static org.supertribe.interceptors.interim.Utils.wrapResult;
-
 public class InterceptableTest {
+
+    @Inject
+    private CanvasBean bean;
+
+    @Before
+    public void setUp() throws Exception {
+        EJBContainer.createEJBContainer().getContext().bind("inject", this);
+    }
 
     @Test
     public void test() throws Exception {
-
-        final CanvasBean bean = Interceptable.of(new CanvasBean())
-                .add(new Red()::businessMethodInterceptor)
-                .add(new Green()::businessMethodInterceptor)
-                .add(new Blue()::businessMethodInterceptor)
-                .add(this::orange)
-                .build();
-
         final List<String> invoke = bean.businessMethod("Question", 6 * 9);
 
         final List<String> expected = new ArrayList<String>();
@@ -59,10 +54,5 @@ public class InterceptableTest {
         expected.add("After:Red");
 
         Assert.assertEquals(Join.join("\n", expected), Join.join("\n", invoke));
-    }
-
-    public Object orange (InvocationContext ic) throws Exception {
-        subtractThree(ic);
-        return wrapResult(ic, "Orange");
     }
 }

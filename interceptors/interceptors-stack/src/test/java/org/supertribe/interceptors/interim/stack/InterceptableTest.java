@@ -18,16 +18,13 @@ package org.supertribe.interceptors.interim.stack;
 
 import org.apache.openejb.util.Join;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.supertribe.interceptors.interim.Blue;
 import org.supertribe.interceptors.interim.Green;
-import org.supertribe.interceptors.interim.Intercept;
 import org.supertribe.interceptors.interim.CanvasBean;
 import org.supertribe.interceptors.interim.Red;
 
-import javax.ejb.embeddable.EJBContainer;
-import javax.inject.Inject;
+import javax.interceptor.InterceptorStack;
 import javax.interceptor.InvocationContext;
 import java.util.ArrayList;
 import java.util.List;

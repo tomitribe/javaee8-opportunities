@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,26 +14,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.interceptors.interim;
+package javax.interceptor;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * @version $Rev$ $Date$
- */
-public class CanvasBean {
-
-    public List<String> businessMethod(String string, int i) {
-        final List<String> list = new ArrayList<>();
-        list.add("businessMethod");
-        list.add(String.format("%s, %s", string.replace("Question", "Answer"), i));
-        return list;
-    }
-
-    public List<String> methodWithDefaultInterceptorsExcluded() {
-        final List<String> list = new ArrayList<String>();
-        list.add("methodWithDefaultInterceptorsExcluded");
-        return list;
-    }
+@FunctionalInterface
+public interface Interception {
+    Object invoke(InvocationContext invocationContext) throws Exception;
 }

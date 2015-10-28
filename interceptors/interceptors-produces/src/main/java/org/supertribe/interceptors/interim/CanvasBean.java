@@ -16,12 +16,11 @@
  */
 package org.supertribe.interceptors.interim;
 
+import javax.enterprise.inject.Typed;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @version $Rev$ $Date$
- */
+@Typed
 public class CanvasBean {
 
     public List<String> businessMethod(String string, int i) {
