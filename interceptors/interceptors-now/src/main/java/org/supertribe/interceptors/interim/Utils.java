@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,7 +14,28 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.interceptors.now;
+package org.supertribe.interceptors.interim;
 
-public class MainTest {
+import javax.interceptor.InvocationContext;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Utils {
+
+    public static List<String> addClassSimpleName(final InvocationContext ic, final String classSimpleName) throws Exception {
+        final Object[] parameters = ic.getParameters();
+        if (parameters.length > 1 && parameters[1] instanceof Integer) {
+            parameters[1] = ((int) parameters[1]) - 2;
+            ic.setParameters(parameters);
+        }
+
+        final List<String> list = new ArrayList<>();
+
+        list.add("Before:" + classSimpleName);
+        list.addAll((List<String>) ic.proceed());
+        list.add("After:" + classSimpleName);
+
+        return list;
+    }
+
 }

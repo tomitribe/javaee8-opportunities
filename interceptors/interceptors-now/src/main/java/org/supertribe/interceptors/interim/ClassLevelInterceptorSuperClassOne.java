@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,5 +16,20 @@
  */
 package org.supertribe.interceptors.interim;
 
-public class Logging {
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
+import javax.interceptor.InvocationContext;
+
+/**
+ * @version $Rev$ $Date$
+ */
+@SuperclassLevelInterceptor
+@Interceptor
+public class ClassLevelInterceptorSuperClassOne {
+
+    @AroundInvoke
+    public Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
+        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+    }
+
 }
