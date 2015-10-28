@@ -80,6 +80,11 @@ public interface AfterBeanDiscovery
     public <T> Iterable<AnnotatedType<T>> getAnnotatedTypes(Class<T> type);
 
 
+
+
+
+
+
     /**
      * Potential location for a new method
      *
@@ -88,6 +93,26 @@ public interface AfterBeanDiscovery
      * @param <T> object type being observed
      */
     public <T> void addObserver(java.util.function.Consumer<T> observer, Annotation... qualifiers);
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * Potential location for a new method
+     *
+     * @param supplier instance of the supplier
+     * @param qualifiers qualifying annotations
+     * @param <T> object type being supplied
+     */
+    public <T> void addProducer(java.util.function.Supplier<T> supplier, Annotation... qualifiers);
 
 
 }

@@ -19,6 +19,6 @@
     <module>testing-security</module>
     <module>callbacks</module>
     <module>interceptors</module>
-    <module>cdi-observers</module>
+    <module>cdi</module>
   </modules>
 </project>

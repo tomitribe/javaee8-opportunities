@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-public class ApplicationBootstrap implements Extension {
+public class BootstrapWithConsumers implements Extension {
 
     public void afterBeanDiscovery(@Observes AfterBeanDiscovery discovery) {
 
@@ -38,7 +38,7 @@ public class ApplicationBootstrap implements Extension {
             discovery.addObserver((Consumer<Thread>) thread -> Runtime.getRuntime().addShutdownHook(thread));
 
             discovery.addObserver((Consumer<Runnable>) Executors.newFixedThreadPool(3)::submit);
-            discovery.addObserver(ApplicationBootstrap::consume);
+            discovery.addObserver(BootstrapWithConsumers::consume);
         }
 
         {

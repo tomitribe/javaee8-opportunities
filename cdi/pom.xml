@@ -11,7 +11,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>cdi-observers</artifactId>
+  <artifactId>cdi</artifactId>
   <packaging>pom</packaging>
 
   <name>CDI Observers</name>
@@ -19,7 +19,6 @@
   <modules>
     <module>cdi-observers-now</module>
     <module>cdi-observers-next</module>
-    <module>cdi-observers-interim</module>
   </modules>
 
 
