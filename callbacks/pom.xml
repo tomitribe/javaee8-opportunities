@@ -17,9 +17,7 @@
   <name>Callbacks</name>
 
   <modules>
-    <module>callbacks-now</module>
     <module>callbacks-next</module>
-    <module>callbacks-interim</module>
   </modules>
 
 

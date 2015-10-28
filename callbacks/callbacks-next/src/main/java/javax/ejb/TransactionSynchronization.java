@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,7 +14,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.callbacks.now;
+//
+// This source code implements specifications defined by the Java
+// Community Process. In order to remain compliant with the specification
+// DO NOT add / change / or delete method signatures!
+//
+package javax.ejb;
 
-public class MainTest {
+public interface TransactionSynchronization {
+
+    @AfterBegin
+    default void afterBegin() {
+    }
+
+    @BeforeCompletion
+    default void beforeCompletion() {
+    }
+
+    @AfterCompletion
+    default void afterCompletion(boolean completed) {
+    }
+
 }
