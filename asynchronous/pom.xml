@@ -17,9 +17,8 @@
   <name>Asynchronous Methods</name>
 
   <modules>
-    <module>asynchronous-now</module>
-    <module>asynchronous-next</module>
-    <module>asynchronous-interim</module>
+    <module>asynchronous-lambda</module>
+    <module>asynchronous-plain</module>
   </modules>
 
 
