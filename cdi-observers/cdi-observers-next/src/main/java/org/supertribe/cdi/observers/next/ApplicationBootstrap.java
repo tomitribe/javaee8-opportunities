@@ -16,8 +16,10 @@
  */
 package org.supertribe.cdi.observers.next;
 
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
+import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.util.AnnotationLiteral;
-import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,40 +27,41 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-public class ApplicationBootstrap {
+public class ApplicationBootstrap implements Extension {
 
-    public void somecode() {
+    public void afterBeanDiscovery(@Observes AfterBeanDiscovery discovery) {
+
         {
             final List<URI> uris = new ArrayList<>();
-            addObserver((Consumer<URI>) uris::add);
+            discovery.addObserver((Consumer<URI>) uris::add);
 
-            addObserver((Consumer<Thread>) thread -> Runtime.getRuntime().addShutdownHook(thread));
+            discovery.addObserver((Consumer<Thread>) thread -> Runtime.getRuntime().addShutdownHook(thread));
 
-            addObserver((Consumer<Runnable>) Executors.newFixedThreadPool(3)::submit);
-            addObserver(ApplicationBootstrap::consume);
+            discovery.addObserver((Consumer<Runnable>) Executors.newFixedThreadPool(3)::submit);
+            discovery.addObserver(ApplicationBootstrap::consume);
         }
 
         {
             final List<URI> uris = new ArrayList<>();
             // @Observes URI
-            addObserver((Consumer<URI>) uris::add);
+            discovery.addObserver((Consumer<URI>) uris::add);
 
             // @Observes Thread
-            addObserver(Runtime.getRuntime()::addShutdownHook);
+            discovery.addObserver(Runtime.getRuntime()::addShutdownHook);
 
             // @Observes Runnable
-            addObserver((Consumer<Runnable>) Executors.newFixedThreadPool(3)::submit);
+            discovery.addObserver((Consumer<Runnable>) Executors.newFixedThreadPool(3)::submit);
 
             // @Observes URI
-            addObserver((Consumer<URI>) System.out::println, new AnnotationLiteral<Fine>() {
+            discovery.addObserver((Consumer<URI>) System.out::println, new AnnotationLiteral<Fine>() {
             });
 
             // @Observes Handler
             final Logger logger = Logger.getLogger("somewhere");
-            addObserver(logger::addHandler); // add handlers via event
+            discovery.addObserver(logger::addHandler); // add handlers via event
 
             // @Observes @Fine String
-            addObserver((Consumer<String>) logger::fine, new AnnotationLiteral<Fine>() {
+            discovery.addObserver((Consumer<String>) logger::fine, new AnnotationLiteral<Fine>() {
             });
         }
     }
@@ -70,9 +73,4 @@ public class ApplicationBootstrap {
     public static void consume(String s) {
     }
 
-    public <T> void addObserver(java.util.function.Consumer<T> observer, Annotation... qualifiers) {
-    }
-
-    public <T> void addObserver(Class<T> type, java.util.function.Consumer<T> observer, Annotation... qualifiers) {
-    }
 }
