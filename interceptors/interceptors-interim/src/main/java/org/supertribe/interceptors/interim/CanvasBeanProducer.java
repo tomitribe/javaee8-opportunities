@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,20 +16,32 @@
  */
 package org.supertribe.interceptors.interim;
 
+import org.supertribe.interceptors.interim.stack.Interceptable;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 
-import static org.supertribe.interceptors.interim.Utils.subtractTwo;
+import static org.supertribe.interceptors.interim.Utils.subtractThree;
 import static org.supertribe.interceptors.interim.Utils.wrapResult;
 
-/**
- * @version $Rev$ $Date$
- */
-public class MethodLevelInterceptorOne {
+public class CanvasBeanProducer {
 
-    @AroundInvoke
-    public Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
-        subtractTwo(ic);
-        return wrapResult(ic, this.getClass().getSimpleName());
+    @ApplicationScoped
+    @Intercept
+    @Produces
+    public CanvasBean create() {
+        return Interceptable.of(new CanvasBean())
+                .add(new Red()::businessMethodInterceptor)
+                .add(new Green()::businessMethodInterceptor)
+                .add(new Blue()::businessMethodInterceptor)
+                .add(this::orange)
+                .build();
+    }
+
+    public Object orange (InvocationContext ic) throws Exception {
+        subtractThree(ic);
+        return wrapResult(ic, "Orange");
     }
 }

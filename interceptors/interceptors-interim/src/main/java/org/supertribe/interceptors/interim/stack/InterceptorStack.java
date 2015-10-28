@@ -30,10 +30,6 @@ import java.util.TreeMap;
 public class InterceptorStack {
     private List<Interception> interceptions = new ArrayList<>();
 
-    public InterceptorStack() {
-        System.out.println("Here");
-    }
-
     public InterceptorStack add(Interception interception) {
         interceptions.add(interception);
         return this;

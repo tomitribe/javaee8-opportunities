@@ -18,22 +18,25 @@ package org.supertribe.interceptors.interim;
 
 import javax.annotation.PostConstruct;
 import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
-import static org.supertribe.interceptors.interim.Utils.subtractTwo;
+import static org.supertribe.interceptors.interim.Utils.subtractThree;
 import static org.supertribe.interceptors.interim.Utils.wrapResult;
 
 /**
  * @version $Rev$ $Date$
  */
-@DefaultInterceptor
-@Interceptor
-public class DefaultInterceptorOne {
+public class Red {
 
     @AroundInvoke
     public Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
-        subtractTwo(ic);
+        subtractThree(ic);
         return wrapResult(ic, this.getClass().getSimpleName());
+    }
+
+    @PostConstruct
+    protected void postConstructInterceptor(final InvocationContext ic) throws Exception {
+        subtractThree(ic);
+        wrapResult(ic, this.getClass().getSimpleName());
     }
 }

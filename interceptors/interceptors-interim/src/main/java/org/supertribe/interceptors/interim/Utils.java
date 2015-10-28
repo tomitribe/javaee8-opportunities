@@ -31,10 +31,10 @@ public class Utils {
         return list;
     }
 
-    public static void subtractTwo(final InvocationContext context) {
+    public static void subtractThree(final InvocationContext context) {
         final Object[] parameters = context.getParameters();
         if (parameters.length > 1 && parameters[1] instanceof Integer) {
-            parameters[1] = ((int) parameters[1]) - 2;
+            parameters[1] = ((int) parameters[1]) - 3;
             context.setParameters(parameters);
         }
     }

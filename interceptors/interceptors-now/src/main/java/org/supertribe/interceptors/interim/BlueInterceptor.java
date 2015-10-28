@@ -16,29 +16,23 @@
  */
 package org.supertribe.interceptors.interim;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
+import javax.interceptor.InvocationContext;
+
+import static org.supertribe.interceptors.interim.Utils.subtractThree;
+import static org.supertribe.interceptors.interim.Utils.wrapResult;
 
 /**
  * @version $Rev$ $Date$
  */
-@ClassLevelInterceptor
-public class FullyInterceptedBean extends FullyInterceptedSuperClass {
+@Blue
+@Interceptor
+public class BlueInterceptor {
 
-    @MethodLevelInterceptor
-    @DefaultInterceptor
-    @Red
-    @Green
-    public List<String> businessMethod(String string, int i) {
-        final List<String> list = new ArrayList<>();
-        list.add("businessMethod");
-        list.add(String.format("%s, %s", string.replace("Question", "Answer"), i));
-        return list;
-    }
-
-    public List<String> methodWithDefaultInterceptorsExcluded() {
-        final List<String> list = new ArrayList<String>();
-        list.add("methodWithDefaultInterceptorsExcluded");
-        return list;
+    @AroundInvoke
+    public Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
+        subtractThree(ic);
+        return wrapResult(ic, "Blue");
     }
 }

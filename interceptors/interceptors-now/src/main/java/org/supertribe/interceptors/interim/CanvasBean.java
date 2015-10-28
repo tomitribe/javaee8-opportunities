@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,16 +16,27 @@
  */
 package org.supertribe.interceptors.interim;
 
-import javax.inject.Qualifier;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.List;
 
-@Qualifier
-@Inherited
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
-public @interface FullyIntercepted {
+/**
+ * @version $Rev$ $Date$
+ */
+@Red
+public class CanvasBean extends ImageBean {
+
+    @Blue
+    @Green
+    public List<String> businessMethod(String string, int i) {
+        final List<String> list = new ArrayList<>();
+        list.add("businessMethod");
+        list.add(String.format("%s, %s", string.replace("Question", "Answer"), i));
+        return list;
+    }
+
+    public List<String> methodWithDefaultInterceptorsExcluded() {
+        final List<String> list = new ArrayList<String>();
+        list.add("methodWithDefaultInterceptorsExcluded");
+        return list;
+    }
 }

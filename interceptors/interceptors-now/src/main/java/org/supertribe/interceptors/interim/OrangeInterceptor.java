@@ -16,12 +16,24 @@
  */
 package org.supertribe.interceptors.interim;
 
-import javax.interceptor.Interceptors;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
+import javax.interceptor.InvocationContext;
+
+import static org.supertribe.interceptors.interim.Utils.subtractThree;
+import static org.supertribe.interceptors.interim.Utils.wrapResult;
 
 /**
  * @version $Rev$ $Date$
  */
-@SuperclassLevelInterceptor
-public class FullyInterceptedSuperClass {
+@Orange
+@Interceptor
+public class OrangeInterceptor {
+
+    @AroundInvoke
+    public Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
+        subtractThree(ic);
+        return wrapResult(ic, "Orange");
+    }
 
 }
