@@ -18,8 +18,8 @@
 
   <modules>
     <module>testing-security-now</module>
-    <module>testing-security-next</module>
-    <module>testing-security-interim</module>
+    <module>testing-security-lambda</module>
+    <module>testing-security-methodref</module>
   </modules>
 
 
