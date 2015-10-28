@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * @version $Rev$ $Date$
  */
-public class FullyInterceptedBean extends FullyInterceptedSuperClass {
+public class CanvasBean extends ImageBean {
 
     public List<String> businessMethod(String string, int i) {
         final List<String> list = new ArrayList<>();

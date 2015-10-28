@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,16 +16,27 @@
  */
 package org.supertribe.interceptors.interim;
 
-import javax.inject.Qualifier;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.annotation.PostConstruct;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
 
-@Qualifier
-@Inherited
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
-public @interface FullyIntercepted {
+import static org.supertribe.interceptors.interim.Utils.subtractThree;
+import static org.supertribe.interceptors.interim.Utils.wrapResult;
+
+/**
+ * @version $Rev$ $Date$
+ */
+public class Red {
+
+    @AroundInvoke
+    public Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
+        subtractThree(ic);
+        return wrapResult(ic, this.getClass().getSimpleName());
+    }
+
+    @PostConstruct
+    protected void postConstructInterceptor(final InvocationContext ic) throws Exception {
+        subtractThree(ic);
+        wrapResult(ic, this.getClass().getSimpleName());
+    }
 }
