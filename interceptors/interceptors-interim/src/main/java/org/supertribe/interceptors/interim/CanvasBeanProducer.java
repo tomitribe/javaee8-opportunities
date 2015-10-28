@@ -20,6 +20,7 @@ import org.supertribe.interceptors.interim.stack.Interceptable;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 
@@ -28,12 +29,15 @@ import static org.supertribe.interceptors.interim.Utils.wrapResult;
 
 public class CanvasBeanProducer {
 
+    @Inject
+    private Red red;
+
     @ApplicationScoped
     @Intercept
     @Produces
     public CanvasBean create() {
         return Interceptable.of(new CanvasBean())
-                .add(new Red()::businessMethodInterceptor)
+                .add(red::businessMethodInterceptor)
                 .add(new Green()::businessMethodInterceptor)
                 .add(new Blue()::businessMethodInterceptor)
                 .add(this::orange)

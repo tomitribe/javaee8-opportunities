@@ -28,15 +28,9 @@ import static org.supertribe.interceptors.interim.Utils.wrapResult;
  */
 public class Red {
 
-    @AroundInvoke
     public Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
         subtractThree(ic);
         return wrapResult(ic, this.getClass().getSimpleName());
     }
 
-    @PostConstruct
-    protected void postConstructInterceptor(final InvocationContext ic) throws Exception {
-        subtractThree(ic);
-        wrapResult(ic, this.getClass().getSimpleName());
-    }
 }
