@@ -20,7 +20,7 @@ import org.apache.openejb.util.Join;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.supertribe.interceptors.interim.FullyInterceptedBean;
+import org.supertribe.interceptors.interim.CanvasBean;
 
 import javax.ejb.embeddable.EJBContainer;
 import javax.inject.Inject;
@@ -30,7 +30,7 @@ import java.util.List;
 public class InterceptableTest {
 
     @Inject
-    private FullyInterceptedBean bean;
+    private CanvasBean bean;
 
     @Before
     public void setUp() throws Exception {
@@ -44,16 +44,12 @@ public class InterceptableTest {
         final List<String> expected = new ArrayList<String>();
         expected.add("Before:Red");
         expected.add("Before:Green");
-        expected.add("Before:DefaultInterceptorOne");
-        expected.add("Before:ClassLevelInterceptorSuperClassOne");
-        expected.add("Before:ClassLevelInterceptorOne");
-        expected.add("Before:MethodLevelInterceptorOne");
+        expected.add("Before:Blue");
+        expected.add("Before:Orange");
         expected.add("businessMethod");
         expected.add("Answer, 42");
-        expected.add("After:MethodLevelInterceptorOne");
-        expected.add("After:ClassLevelInterceptorOne");
-        expected.add("After:ClassLevelInterceptorSuperClassOne");
-        expected.add("After:DefaultInterceptorOne");
+        expected.add("After:Orange");
+        expected.add("After:Blue");
         expected.add("After:Green");
         expected.add("After:Red");
 

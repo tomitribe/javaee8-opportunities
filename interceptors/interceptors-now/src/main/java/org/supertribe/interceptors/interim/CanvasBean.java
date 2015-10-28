@@ -16,24 +16,27 @@
  */
 package org.supertribe.interceptors.interim;
 
-import javax.annotation.PostConstruct;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
-
-import static org.supertribe.interceptors.interim.Utils.subtractTwo;
-import static org.supertribe.interceptors.interim.Utils.wrapResult;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @version $Rev$ $Date$
  */
-@DefaultInterceptor
-@Interceptor
-public class DefaultInterceptorOne {
+@Red
+public class CanvasBean extends ImageBean {
 
-    @AroundInvoke
-    public Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
-        subtractTwo(ic);
-        return wrapResult(ic, this.getClass().getSimpleName());
+    @Blue
+    @Green
+    public List<String> businessMethod(String string, int i) {
+        final List<String> list = new ArrayList<>();
+        list.add("businessMethod");
+        list.add(String.format("%s, %s", string.replace("Question", "Answer"), i));
+        return list;
+    }
+
+    public List<String> methodWithDefaultInterceptorsExcluded() {
+        final List<String> list = new ArrayList<String>();
+        list.add("methodWithDefaultInterceptorsExcluded");
+        return list;
     }
 }

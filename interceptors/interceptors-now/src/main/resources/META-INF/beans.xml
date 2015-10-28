@@ -2,9 +2,7 @@
     <interceptors>
         <class>org.supertribe.interceptors.interim.RedInterceptor</class>
         <class>org.supertribe.interceptors.interim.GreenInterceptor</class>
-        <class>org.supertribe.interceptors.interim.Red</class>
-        <class>org.supertribe.interceptors.interim.Green</class>
-        <class>org.supertribe.interceptors.interim.Blue</class>
-        <class>org.supertribe.interceptors.interim.Orange</class>
+        <class>org.supertribe.interceptors.interim.BlueInterceptor</class>
+        <class>org.supertribe.interceptors.interim.OrangeInterceptor</class>
     </interceptors>
 </beans>

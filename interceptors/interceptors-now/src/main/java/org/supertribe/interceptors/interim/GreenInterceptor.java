@@ -20,20 +20,19 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
-import static org.supertribe.interceptors.interim.Utils.subtractTwo;
+import static org.supertribe.interceptors.interim.Utils.subtractThree;
 import static org.supertribe.interceptors.interim.Utils.wrapResult;
 
 /**
  * @version $Rev$ $Date$
  */
-@Interceptor
 @Green
+@Interceptor
 public class GreenInterceptor {
 
     @AroundInvoke
     public Object businessMethodInterceptor(final InvocationContext ic) throws Exception {
-        subtractTwo(ic);
+        subtractThree(ic);
         return wrapResult(ic, "Green");
     }
-
 }
