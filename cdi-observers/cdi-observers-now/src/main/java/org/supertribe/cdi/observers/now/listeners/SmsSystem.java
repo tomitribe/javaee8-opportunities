@@ -14,7 +14,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.callbacks.interim;
+package org.supertribe.cdi.observers.now.listeners;
 
-public class Main {
+
+import org.supertribe.cdi.observers.now.events.*;
+
+import javax.enterprise.event.Observes;
+
+public class SmsSystem {
+
+    public void sms(@Observes DiskFull diskFull) {
+        System.out.printf("> SMS - %s%n", diskFull);
+    }
+
+
+    public void sms(@Observes NetworkAlert networkAlert) {
+        System.out.printf("> SMS - %s%n", networkAlert);
+    }
+
+
 }

@@ -14,7 +14,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.callbacks.interim;
+package org.supertribe.cdi.observers.now.events;
 
-public class MainTest {
+public class DiskAlert {
+
+    protected final String path;
+
+    public DiskAlert(String path) {
+        this.path = path;
+    }
+
+    @Override
+    public String toString() {
+        return "DiskAlert{" +
+                "path='" + path + '\'' +
+                '}';
+    }
 }

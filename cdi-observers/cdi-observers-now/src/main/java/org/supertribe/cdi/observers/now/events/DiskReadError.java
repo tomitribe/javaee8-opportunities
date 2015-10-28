@@ -14,7 +14,19 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.cdi.observers.now;
+package org.supertribe.cdi.observers.now.events;
 
-public class MainTest {
+public class DiskReadError extends DiskAlert {
+
+    public DiskReadError(String path) {
+        super(path);
+    }
+
+    @Override
+    public String toString() {
+        return "DiskReadError{" +
+                "path='" + path + '\'' +
+                '}';
+    }
+
 }

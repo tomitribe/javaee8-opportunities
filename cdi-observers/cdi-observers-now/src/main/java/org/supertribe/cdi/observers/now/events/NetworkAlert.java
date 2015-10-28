@@ -14,7 +14,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.supertribe.cdi.observers.now;
+package org.supertribe.cdi.observers.now.events;
 
-public class Main {
+import java.net.URI;
+
+public class NetworkAlert {
+
+    private final URI location;
+
+    public NetworkAlert(URI location) {
+        this.location = location;
+    }
+
+    @Override
+    public String toString() {
+        return "NetworkAlert{" +
+                "location=" + location +
+                '}';
+    }
 }
