@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,13 +16,29 @@
  */
 package org.supertribe.interceptors.interim;
 
-import javax.annotation.security.RunAs;
-import javax.interceptor.InvocationContext;
+import java.util.ArrayList;
+import java.util.List;
 
-@RunAs("Manager")
-public class Security {
+/**
+ * @version $Rev$ $Date$
+ */
+@ClassLevelInterceptor
+public class FullyInterceptedBean extends FullyInterceptedSuperClass {
 
-    public Object manager(InvocationContext invocationContext) throws Exception {
-        return invocationContext.proceed();
+    @MethodLevelInterceptor
+    @DefaultInterceptor
+    @Red
+    @Green
+    public List<String> businessMethod(String string, int i) {
+        final List<String> list = new ArrayList<>();
+        list.add("businessMethod");
+        list.add(String.format("%s, %s", string.replace("Question", "Answer"), i));
+        return list;
+    }
+
+    public List<String> methodWithDefaultInterceptorsExcluded() {
+        final List<String> list = new ArrayList<String>();
+        list.add("methodWithDefaultInterceptorsExcluded");
+        return list;
     }
 }
