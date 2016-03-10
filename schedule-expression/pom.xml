@@ -17,6 +17,7 @@
   <name>Schedule Expression</name>
 
   <modules>
+    <module>schedule-methods-now</module>
     <module>schedule-expression-now</module>
     <module>schedule-expression-next</module>
     <module>schedule-expression-interim</module>
