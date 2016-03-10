@@ -48,26 +48,37 @@ public class FarmerBrown {
     private void construct() {
 
         {// Planting time
-            final TimerConfig timerConfig = new TimerConfig("plantTheCorn", false);
 
-            final ScheduleExpression scheduleExpression = schedule().month(5).dayOfMonth("20-Last");
+            timerService.createCalendarTimer(
+                    new ScheduleExpression().minute(0).hour(8).month(5).dayOfMonth("20-Last"),
+                    new TimerConfig("plantTheCorn", false)
+            );
 
-            timerService.createCalendarTimer(scheduleExpression, timerConfig);
-
-            timerService.createCalendarTimer(schedule().month(6).dayOfMonth("1-10"), timerConfig);
+            timerService.createCalendarTimer(
+                    new ScheduleExpression().minute(0).hour(8).month(6).dayOfMonth("1-10"),
+                    new TimerConfig("plantTheCorn", false)
+            );
         }
 
         {// Harvest time
-            final TimerConfig timerConfig = new TimerConfig("harvestTheCorn", false);
 
-            timerService.createCalendarTimer(schedule().month(9).dayOfMonth("20-Last"), timerConfig);
-            timerService.createCalendarTimer(schedule().month(10).dayOfMonth("1-10"), timerConfig);
+            timerService.createCalendarTimer(
+                    new ScheduleExpression().minute(0).hour(8).month(9).dayOfMonth("20-Last"),
+                    new TimerConfig("harvestTheCorn", false)
+            );
+
+            timerService.createCalendarTimer(
+                    new ScheduleExpression().minute(0).hour(8).month(10).dayOfMonth("1-10"),
+                    new TimerConfig("harvestTheCorn", false)
+            );
         }
 
         { // ...
-            final TimerConfig timerConfig = new TimerConfig("checkOnTheDaughters", false);
 
-            timerService.createCalendarTimer(schedule().second("*").minute("*").hour("*"), timerConfig);
+            timerService.createCalendarTimer(
+                    new ScheduleExpression().minute(0).hour(8).second("*").minute("*").hour("*"),
+                    new TimerConfig("checkOnTheDaughters", false)
+            );
         }
     }
 
@@ -104,7 +115,4 @@ public class FarmerBrown {
         return checks.get();
     }
 
-    private ScheduleExpression schedule() {
-        return new ScheduleExpression().minute(0).hour(8);
-    }
 }
