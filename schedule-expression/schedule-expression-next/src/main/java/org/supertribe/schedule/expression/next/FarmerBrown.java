@@ -46,7 +46,6 @@ public class FarmerBrown {
         final ScheduleExpression schedule = schedule().month(5).dayOfMonth("20-Last");
 
         timerService.createCalendarTimer(schedule, this::plantTheCorn);
-
         timerService.createCalendarTimer(schedule().month(6).dayOfMonth("1-10"), this::plantTheCorn);
 
         timerService.createCalendarTimer(schedule().month(9).dayOfMonth("20-Last"), this::harvestTheCorn);
@@ -55,27 +54,23 @@ public class FarmerBrown {
         timerService.createCalendarTimer(schedule().second("*").minute("*").hour("*"), this::checkOnTheDaughters);
     }
 
-    private Object plantTheCorn(Object o) {
+    private void plantTheCorn() {
         // Dig out the planter!!!
-        return null;
     }
 
-    private Object harvestTheCorn(Object o) {
+    private void harvestTheCorn() {
         // Dig out the combine!!!
-        return null;
     }
 
-    private Object checkOnTheDaughters(Object o) {
+    private void checkOnTheDaughters() {
         checks.incrementAndGet();
-        return null;
-    }
-
-    public int getChecks() {
-        return checks.get();
     }
 
     private ScheduleExpression schedule() {
         return new ScheduleExpression().minute(0).hour(8);
     }
 
+    public int getChecks() {
+        return checks.get();
+    }
 }

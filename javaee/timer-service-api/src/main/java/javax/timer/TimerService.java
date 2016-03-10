@@ -51,7 +51,6 @@ public interface TimerService {
 
     Timer createIntervalTimer(Date initialExpiration, long intervalDuration, TimerConfig timerConfig) throws IllegalArgumentException, IllegalStateException, EJBException;
 
-//    Timer createCalendarTimer(ScheduleExpression schedule, TimeoutFunction function) throws IllegalArgumentException, IllegalStateException, EJBException;
-    Timer createCalendarTimer(ScheduleExpression schedule, Function function) throws IllegalArgumentException, IllegalStateException, EJBException;
+    Timer createCalendarTimer(ScheduleExpression schedule, TimeoutFunction function) throws IllegalArgumentException, IllegalStateException, EJBException;
 
 }

@@ -21,10 +21,14 @@
 //
 package javax.timer;
 
-import java.io.Serializable;
+import javax.ejb.Timer;
 
 @FunctionalInterface
 public interface TimeoutFunction {
 
-    public void timeout(Serializable input);
+    void timeout();
+
+    default void timeout(Timer timer) {
+        timeout();
+    }
 }

@@ -33,6 +33,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * This is where we schedule all of Farmer Brown's corn jobs
  *
+ * This technique works now in with Java 8 with Java EE 6 and above
+ *
  * @version $Revision$ $Date$
  */
 @Singleton
@@ -49,32 +51,52 @@ public class FarmerBrown {
     private void construct() {
 
         {// Planting time
-            final TimerConfig timerConfig = new TimerConfig((Serializable & Runnable) this::plantTheCorn, false);
 
-            final ScheduleExpression scheduleExpression = schedule().month(5).dayOfMonth("20-Last");
+            // Here is the magic
+            final Serializable plantTheCorn = (Serializable & Runnable) this::plantTheCorn;
 
-            timerService.createCalendarTimer(scheduleExpression, timerConfig);
+            timerService.createCalendarTimer(
+                    new ScheduleExpression().minute(0).hour(8).month(5).dayOfMonth("20-Last"),
+                    new TimerConfig(plantTheCorn, false)
+            );
 
-            timerService.createCalendarTimer(schedule().month(6).dayOfMonth("1-10"), timerConfig);
+            timerService.createCalendarTimer(
+                    new ScheduleExpression().minute(0).hour(8).month(6).dayOfMonth("1-10"),
+                    new TimerConfig(plantTheCorn, false)
+            );
         }
 
         {// Harvest time
-            final TimerConfig timerConfig = new TimerConfig((Serializable & Runnable) this::harvestTheCorn, false);
+            final Serializable harvestTheCorn = (Serializable & Runnable) this::harvestTheCorn;
 
-            timerService.createCalendarTimer(schedule().month(9).dayOfMonth("20-Last"), timerConfig);
-            timerService.createCalendarTimer(schedule().month(10).dayOfMonth("1-10"), timerConfig);
+            timerService.createCalendarTimer(
+                    new ScheduleExpression().minute(0).hour(8).month(9).dayOfMonth("20-Last"),
+                    new TimerConfig(harvestTheCorn, false)
+            );
+
+            timerService.createCalendarTimer(
+                    new ScheduleExpression().minute(0).hour(8).month(10).dayOfMonth("1-10"),
+                    new TimerConfig(harvestTheCorn, false)
+            );
         }
 
-        { // ...
-            final TimerConfig timerConfig = new TimerConfig((Serializable & Runnable) this::checkOnTheDaughters, false);
+        {// Check on the daughters
 
-            timerService.createCalendarTimer(schedule().second("*").minute("*").hour("*"), timerConfig);
+            final Serializable checkOnTheDaughters = (Serializable & Runnable) this::checkOnTheDaughters;
+
+            timerService.createCalendarTimer(
+                    new ScheduleExpression().minute(0).hour(8).second("*").minute("*").hour("*"),
+                    new TimerConfig(checkOnTheDaughters, false)
+            );
         }
+
+
     }
 
     @Timeout
     public void timeout(Timer timer) {
-        ((Runnable) timer.getInfo()).run();
+        final Runnable runnable = (Runnable) timer.getInfo();
+        runnable.run();
     }
 
     private void plantTheCorn() {
@@ -91,10 +113,6 @@ public class FarmerBrown {
 
     public int getChecks() {
         return checks.get();
-    }
-
-    private ScheduleExpression schedule() {
-        return new ScheduleExpression().minute(0).hour(8);
     }
 
 }
