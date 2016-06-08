@@ -27,6 +27,7 @@ import javax.ejb.Timeout;
 import javax.ejb.Timer;
 import javax.ejb.TimerConfig;
 import javax.ejb.TimerService;
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -75,9 +76,10 @@ public class FarmerBrown {
 
         { // ...
 
+            final String checkOnTheDaughters = "checkOnTheDaughters";
             timerService.createCalendarTimer(
                     new ScheduleExpression().minute(0).hour(8).second("*").minute("*").hour("*"),
-                    new TimerConfig("checkOnTheDaughters", false)
+                    new TimerConfig(checkOnTheDaughters, false)
             );
         }
     }
@@ -85,7 +87,8 @@ public class FarmerBrown {
     @Timeout
     public void timeout(Timer timer) {
 
-        if ("plantTheCorn".equals(timer.getInfo())) {
+        final Serializable info = timer.getInfo();
+        if ("plantTheCorn".equals(info)) {
 
             plantTheCorn();
 

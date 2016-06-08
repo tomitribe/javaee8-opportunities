@@ -95,7 +95,8 @@ public class FarmerBrown {
 
     @Timeout
     public void timeout(Timer timer) {
-        final Runnable runnable = (Runnable) timer.getInfo();
+        final Serializable info = timer.getInfo();
+        final Runnable runnable = (Runnable) info;
         runnable.run();
     }
 

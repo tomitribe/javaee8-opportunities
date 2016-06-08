@@ -18,7 +18,6 @@
 package com.container.stuff;
 
 import javax.interceptor.Interception;
-import javax.interceptor.Invocation;
 import javax.interceptor.InvocationContext;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -28,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.Callable;
 
 public class InterceptorStack {
     private List<Interception> interceptions = new ArrayList<>();
@@ -41,7 +41,7 @@ public class InterceptorStack {
         return invoke(beanInstance, targetMethod, () -> targetMethod.invoke(beanInstance, parameters), parameters);
     }
 
-    public Object invoke(final Object beanInstance, final Method targetMethod, final Invocation invocation, final Object... parameters) throws Exception {
+    public <V> V invoke(final Object beanInstance, final Method targetMethod, final Callable<V> invocation, final Object... parameters) throws Exception {
         final Iterator<Interception> invocations = interceptions.iterator();
         final Map<String, Object> contextData = new TreeMap<>();
         final Class<?>[] parameterTypes = (targetMethod != null) ? targetMethod.getParameterTypes() : new Class[0];
@@ -89,18 +89,14 @@ public class InterceptorStack {
                         Interception result = invocations.next();
                         return result.invoke(this);
                     } else {
-                        return invocation.invoke();
+                        return invocation.call();
                     }
                 } catch (final InvocationTargetException e) {
                     throw Exceptions.unwrapCause(e);
                 }
             }
         };
-        return context.proceed();
-    }
-
-    public Object invoke(Invocation question) throws Exception {
-        return invoke(null, null, question);
+        return (V) context.proceed();
     }
 
     public static class Exceptions {
