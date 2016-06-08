@@ -39,14 +39,14 @@ public class InterceptableTest {
 
         final CanvasBean bean = new CanvasBean();
 
-        final List<String> invoke = (List<String>) new InterceptorStack()
+        final List<String> invoke = new InterceptorStack()
+                // Functional Interceptor interface
                 .add(new Red()::businessMethodInterceptor)
                 .add(new Green()::businessMethodInterceptor)
                 .add(new Blue()::businessMethodInterceptor)
                 .add(this::orange)
-                .invoke(() -> {
-                    return bean.businessMethod("Question", 6 * 9);
-                });
+                // Functional use of Callable<V>
+                .invoke(() -> bean.businessMethod("Question", 6 * 9));
 
 
         final List<String> expected = new ArrayList<String>();

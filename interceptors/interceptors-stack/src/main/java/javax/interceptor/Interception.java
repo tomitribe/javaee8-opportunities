@@ -16,8 +16,6 @@
  */
 package javax.interceptor;
 
-import javax.interceptor.InvocationContext;
-
 @FunctionalInterface
 public interface Interception {
     Object invoke(InvocationContext invocationContext) throws Exception;
