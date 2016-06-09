@@ -46,7 +46,7 @@ public class InterceptableTest {
 
         final List<String> invoke = bean.businessMethod("Question", 6 * 9);
 
-        final List<String> expected = new ArrayList<String>();
+        final List<String> expected = new ArrayList<>();
         expected.add("Before:Red");
         expected.add("Before:Green");
         expected.add("Before:Blue");

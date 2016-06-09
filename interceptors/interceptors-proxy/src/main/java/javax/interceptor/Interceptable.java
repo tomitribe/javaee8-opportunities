@@ -38,7 +38,7 @@ public class Interceptable<T> {
     public T build() {
         return (T) LocalBeanProxyFactory.newProxyInstance(
                 delegate.getClass().getClassLoader(),
-                new InterceptorStackInvocationHandler(interceptorStack, delegate),
+                (proxy, method, args) -> interceptorStack.invoke(delegate, method, args),
                 delegate.getClass(),
                 delegate.getClass().getInterfaces()
         );
@@ -47,21 +47,5 @@ public class Interceptable<T> {
     public Interceptable<T> add(final Interception interception) {
         interceptorStack.add(interception);
         return this;
-    }
-
-    private class InterceptorStackInvocationHandler implements InvocationHandler {
-
-        private final InterceptorStack interceptorStack;
-        private final T delegate;
-
-        public InterceptorStackInvocationHandler(final InterceptorStack interceptorStack, final T delegate) {
-            this.interceptorStack = interceptorStack;
-            this.delegate = delegate;
-        }
-
-        @Override
-        public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-            return interceptorStack.invoke(delegate, method, args);
-        }
     }
 }
